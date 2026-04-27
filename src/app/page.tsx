@@ -372,6 +372,7 @@ export default function Home() {
             </div>
           </div>
         )}
+      </div>
 
       {/* MODAL EXPORT */}
       <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
