@@ -288,6 +288,9 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
             {/* Pricing Section */}
             <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
               <div className="text-center space-y-3">
@@ -369,7 +372,6 @@ export default function Home() {
             </div>
           </div>
         )}
-      </div>
 
       {/* MODAL EXPORT */}
       <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
