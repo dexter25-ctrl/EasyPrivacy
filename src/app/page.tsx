@@ -288,8 +288,85 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
+            {/* Pricing Section */}
+            <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+              <div className="text-center space-y-3">
+                <h2 className="text-3xl sm:text-4xl font-black text-white">Passez aux normes dès aujourd'hui</h2>
+                <p className="text-white/60 text-lg">Choisissez la protection adaptée à votre entreprise.</p>
               </div>
-            )}
+
+              <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {/* Plan 1: Essentiel */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-white">Essentiel</h3>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-black text-white">29€</span>
+                      <span className="text-white/40 text-sm font-medium">/ mois</span>
+                    </div>
+                    <p className="text-white/50 text-sm">La surveillance de base pour les petits sites.</p>
+                  </div>
+
+                  <ul className="space-y-4 flex-1">
+                    {[
+                      "Scan hebdomadaire automatique",
+                      "Alertes par email (nouveaux traqueurs)",
+                      "Générateur de politique standard",
+                    ].map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-white/80">
+                        <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all">
+                    Commencer
+                  </button>
+                </div>
+
+                {/* Plan 2: Sérénité Totale */}
+                <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border-2 border-teal-500/50 rounded-3xl p-8 flex flex-col space-y-8 shadow-2xl shadow-teal-500/10 hover:border-teal-400 transition-all scale-105 sm:scale-110 z-20">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                    Le plus populaire
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                      Sérénité Totale
+                      <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    </h3>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-black text-white">79€</span>
+                      <span className="text-white/40 text-sm font-medium">/ mois</span>
+                    </div>
+                    <p className="text-white/50 text-sm">Le bouclier juridique complet, on s'occupe de tout.</p>
+                  </div>
+
+                  <ul className="space-y-4 flex-1">
+                    {[
+                      "Tout de l'offre Essentiel",
+                      "Installation du bandeau cookie",
+                      "Mises à jour juridiques auto",
+                      "Support prioritaire 24/7",
+                    ].map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-white/80">
+                        <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all">
+                    Sécuriser mon site
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
