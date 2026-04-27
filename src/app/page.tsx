@@ -14,6 +14,11 @@ export default function Home() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // États pour la popup d'export
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalEmail, setModalEmail] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(false);
+
   // Simulation de messages de chargement réalistes
   useEffect(() => {
     if (loading) {
@@ -55,7 +60,8 @@ export default function Home() {
       ]);
 
       if (!response.ok) {
-        throw new Error("Une erreur est survenue");
+        const data = await response.json();
+        throw new Error(data.error || "Une erreur est survenue");
       }
 
       const data = await response.json();
@@ -63,8 +69,8 @@ export default function Home() {
         score: data.score,
         criticalPoints: data.criticalPoints,
       });
-    } catch (err) {
-      setError("Impossible d'effectuer l'audit pour le moment.");
+    } catch (err: any) {
+      setError(err.message || "Impossible d'effectuer l'audit pour le moment.");
     } finally {
       setLoading(false);
     }
@@ -77,11 +83,17 @@ export default function Home() {
     }
   };
 
-  const handleExport = () => {
-    if (!result) return;
-    const text = `Audit EasyPrivacy - ${url}\nScore: ${result.score}/100\nPoints critiques:\n- ${result.criticalPoints.join("\n- ")}`;
-    navigator.clipboard.writeText(text);
-    alert("Audit copié dans le presse-papier !");
+  const handleModalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (modalEmail) {
+      setModalSuccess(true);
+    }
+  };
+
+  const closeItems = () => {
+    setIsModalOpen(false);
+    setModalSuccess(false);
+    setModalEmail("");
   };
 
   return (
@@ -109,10 +121,10 @@ export default function Home() {
           <form onSubmit={handleAudit} className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <input
-                type="url"
+                type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://votre-site.com"
+                placeholder="votre-site.com"
                 required
                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all"
               />
@@ -125,7 +137,7 @@ export default function Home() {
               {loading ? "ANALYSE EN COURS..." : "LANCER L'AUDIT GRATUIT"}
             </button>
           </form>
-          {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
+          {error && <p className="text-red-400 mt-4 text-center font-medium">{error}</p>}
         </div>
 
         {/* Loading State / Skeleton */}
@@ -177,14 +189,16 @@ export default function Home() {
                     Points critiques détectés
                   </h2>
                   <ul className="space-y-3">
-                    {result.criticalPoints.map((point, index) => (
+                    {result.criticalPoints.length > 0 ? result.criticalPoints.map((point, index) => (
                       <li key={index} className="flex items-start gap-4 bg-black/40 p-4 rounded-2xl border border-white/5">
                         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-xs font-bold mt-1">
                           !
                         </span>
                         <span className="text-white/90 text-sm leading-relaxed">{point}</span>
                       </li>
-                    ))}
+                    )) : (
+                      <li className="text-teal-400 text-center py-8 font-medium">Félicitations ! Aucun point critique majeur détecté.</li>
+                    )}
                   </ul>
                 </div>
 
@@ -225,7 +239,7 @@ export default function Home() {
               <div className="space-y-6 animate-in slide-in-from-top-4 duration-500">
                 <div className="flex justify-center">
                   <button
-                    onClick={handleExport}
+                    onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-all"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -258,6 +272,79 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* MODAL EXPORT */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            onClick={closeItems}
+          />
+          <div className="relative bg-slate-900 border border-white/10 rounded-3xl p-8 sm:p-12 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200">
+            {/* Bouton Fermer */}
+            <button 
+              onClick={closeItems}
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-all"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="text-center space-y-6">
+              <div className="w-16 h-16 bg-teal-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+
+              {!modalSuccess ? (
+                <>
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-black text-white">Recevez votre rapport complet</h2>
+                    <p className="text-white/60 text-sm">
+                      Entrez votre adresse email pour recevoir les détails des points critiques et nos solutions directement dans votre boîte mail.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleModalSubmit} className="space-y-4">
+                    <input
+                      type="email"
+                      required
+                      value={modalEmail}
+                      onChange={(e) => setModalEmail(e.target.value)}
+                      placeholder="votre@email.com"
+                      className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                    />
+                    <button 
+                      type="submit"
+                      className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-black py-4 rounded-2xl transition-all shadow-xl shadow-teal-500/20"
+                    >
+                      RECEVOIR MON AUDIT
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <div className="py-8 space-y-4 animate-in fade-in zoom-in-95">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Bien reçu !</h3>
+                  <p className="text-white/60 text-sm">Vérifiez votre boîte mail. Votre rapport complet est en route.</p>
+                  <button 
+                    onClick={closeItems}
+                    className="mt-6 text-teal-400 text-sm font-bold uppercase tracking-widest hover:text-teal-300 transition-all"
+                  >
+                    Fermer
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Footer */}
       <footer className="mt-auto pt-12 pb-6 text-white/20 text-xs font-medium uppercase tracking-[0.2em] z-10">
