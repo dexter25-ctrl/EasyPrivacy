@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -294,22 +295,21 @@ export default function Home() {
       </div>
 
       {/* MODAL EXPORT */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={closeItems}
-          />
-          <div className="relative bg-slate-900 border border-white/10 rounded-3xl p-8 sm:p-12 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200">
+      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity" />
+          <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50 bg-slate-900 border border-white/10 rounded-3xl p-8 sm:p-12 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200 focus:outline-none">
             {/* Bouton Fermer */}
-            <button
-              onClick={closeItems}
-              className="absolute top-6 right-6 text-white/40 hover:text-white transition-all"
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <Dialog.Close asChild>
+              <button
+                className="absolute top-6 right-6 text-white/40 hover:text-white transition-all"
+                onClick={closeItems}
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </Dialog.Close>
 
             <div className="text-center space-y-6">
               <div className="w-16 h-16 bg-teal-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
@@ -321,10 +321,10 @@ export default function Home() {
               {!modalSuccess ? (
                 <>
                   <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-white">Recevez votre rapport complet</h2>
-                    <p className="text-white/60 text-sm">
-                      Entrez votre adresse email pour recevoir les détails des points critiques et nos solutions directement dans votre boîte mail.
-                    </p>
+                    <Dialog.Title className="text-2xl font-black text-white">Recevez votre rapport complet</Dialog.Title>
+                    <Dialog.Description className="text-white/60 text-sm">
+                      Entrez votre email pour obtenir les résultats.
+                    </Dialog.Description>
                   </div>
 
                   <form onSubmit={handleModalSubmit} className="space-y-4">
@@ -346,6 +346,8 @@ export default function Home() {
                 </>
               ) : (
                 <div className="py-8 space-y-4 animate-in fade-in zoom-in-95">
+                  <Dialog.Title className="sr-only">Succès de l'envoi</Dialog.Title>
+                  <Dialog.Description className="sr-only">Votre rapport a été envoyé.</Dialog.Description>
                   <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -362,9 +364,9 @@ export default function Home() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       {/* Footer */}
       <footer className="mt-auto pt-12 pb-6 text-white/20 text-xs font-medium uppercase tracking-[0.2em] z-10">
