@@ -42,7 +42,7 @@ export default function Home() {
   const handleAudit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
-    
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -88,7 +88,7 @@ export default function Home() {
     if (!modalEmail || !result) return;
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbypzav_TuIB_y8Bk89FPoSgoql-9BFt7ZEln3MVSRHTiSPCT_Ov6Vc44fNJiZBbCVeC/exec", {
+      await fetch("https://script.google.com/macros/s/AKfycbwLJQxpc6ggHKHZlRqW9JiSN77CfInyWw4Rqtz7dbKy0_wXtWHIvuwA8FYJpIbNM57-/exec", {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
@@ -296,13 +296,13 @@ export default function Home() {
       {/* MODAL EXPORT */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={closeItems}
           />
           <div className="relative bg-slate-900 border border-white/10 rounded-3xl p-8 sm:p-12 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200">
             {/* Bouton Fermer */}
-            <button 
+            <button
               onClick={closeItems}
               className="absolute top-6 right-6 text-white/40 hover:text-white transition-all"
             >
@@ -336,7 +336,7 @@ export default function Home() {
                       placeholder="votre@email.com"
                       className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                     />
-                    <button 
+                    <button
                       type="submit"
                       className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-black py-4 rounded-2xl transition-all shadow-xl shadow-teal-500/20"
                     >
@@ -353,7 +353,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-white">Rapport envoyé !</h3>
                   <p className="text-white/60 text-sm">Pensez à vérifier vos spams.</p>
-                  <button 
+                  <button
                     onClick={closeItems}
                     className="mt-6 text-teal-400 text-sm font-bold uppercase tracking-widest hover:text-teal-300 transition-all"
                   >
@@ -365,7 +365,7 @@ export default function Home() {
           </div>
         </div>
       )}
-      
+
       {/* Footer */}
       <footer className="mt-auto pt-12 pb-6 text-white/20 text-xs font-medium uppercase tracking-[0.2em] z-10">
         © 2026 EasyPrivacy Compliance SaaS - Sécurisé par chiffrement AES-256
