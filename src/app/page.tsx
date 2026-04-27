@@ -83,10 +83,30 @@ export default function Home() {
     }
   };
 
-  const handleModalSubmit = (e: React.FormEvent) => {
+  const handleModalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (modalEmail) {
+    if (!modalEmail || !result) return;
+
+    try {
+      await fetch("https://script.google.com/macros/s/AKfycbypzav_TuIB_y8Bk89FPoSgoql-9BFt7ZEln3MVSRHTiSPCT_Ov6Vc44fNJiZBbCVeC/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: modalEmail,
+          url: url,
+          score: result.score
+        })
+      });
       setModalSuccess(true);
+      setTimeout(() => {
+        closeItems();
+      }, 3000);
+    } catch (err) {
+      console.error("Erreur lors de l'envoi au webhook:", err);
+      // Fallback: montrer le succès quand même pour l'UX si le webhook bloque sur une erreur réseau
+      setModalSuccess(true);
+      setTimeout(() => closeItems(), 3000);
     }
   };
 
@@ -331,8 +351,8 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white">Bien reçu !</h3>
-                  <p className="text-white/60 text-sm">Vérifiez votre boîte mail. Votre rapport complet est en route.</p>
+                  <h3 className="text-xl font-bold text-white">Rapport envoyé !</h3>
+                  <p className="text-white/60 text-sm">Pensez à vérifier vos spams.</p>
                   <button 
                     onClick={closeItems}
                     className="mt-6 text-teal-400 text-sm font-bold uppercase tracking-widest hover:text-teal-300 transition-all"
