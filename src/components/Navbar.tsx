@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
 export default function Navbar() {
+  const { isSignedIn } = useUser();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -19,15 +21,13 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="flex items-center gap-6">
-          <SignedOut>
+          {!isSignedIn ? (
             <SignInButton mode="modal">
               <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all">
                 Se connecter
               </button>
             </SignInButton>
-          </SignedOut>
-          
-          <SignedIn>
+          ) : (
             <div className="flex items-center gap-6">
               <Link 
                 href="/dashboard" 
@@ -45,7 +45,7 @@ export default function Navbar() {
                 />
               </div>
             </div>
-          </SignedIn>
+          )}
         </div>
       </div>
     </nav>
