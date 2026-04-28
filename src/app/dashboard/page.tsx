@@ -1,20 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Dashboard() {
+function DashboardContent() {
   const { user } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [lastAudit, setLastAudit] = useState<{
     score: number;
     date: string;
     url: string;
     criticalPoints: string[];
   } | null>(null);
+
+  // States pour l'abonnement
+  const [isPro, setIsPro] = useState(false);
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false);
 
   // States pour le formulaire de contact
   const [contactSubject, setContactSubject] = useState("");
@@ -25,11 +31,25 @@ export default function Dashboard() {
   const [activeModal, setActiveModal] = useState<"score" | "risques" | "statut" | null>(null);
 
   useEffect(() => {
+    // Charger l'audit
     const savedAudit = localStorage.getItem("lastAudit");
     if (savedAudit) {
       setLastAudit(JSON.parse(savedAudit));
     }
-  }, []);
+
+    // Charger le statut Pro
+    const savedIsPro = localStorage.getItem("isPro") === "true";
+    setIsPro(savedIsPro);
+
+    // Détecter le succès du paiement
+    if (searchParams.get("success") === "true") {
+      setIsPro(true);
+      localStorage.setItem("isPro", "true");
+      setShowSuccessBanner(true);
+      // Nettoyer l'URL sans rafraîchir
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, [searchParams]);
 
   const handleSendEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,13 +93,38 @@ export default function Dashboard() {
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse delay-700" />
 
       <div className="w-full max-w-6xl z-10 space-y-10">
+        
+        {/* BANNIÈRE DE SUCCÈS */}
+        {showSuccessBanner && (
+          <div className="animate-in slide-in-from-top-4 duration-500 bg-emerald-500/10 border-2 border-emerald-500/50 backdrop-blur-xl p-6 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+            <div className="flex items-center gap-4 text-center sm:text-left">
+              <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">🎉</div>
+              <div>
+                <h3 className="text-emerald-400 font-black uppercase tracking-widest text-xs">Paiement Réussi</h3>
+                <p className="text-white font-medium text-sm">Félicitations ! Votre abonnement EasyPrivacy a été activé avec succès. Votre site est désormais sous haute protection.</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowSuccessBanner(false)}
+              className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all"
+            >
+              Fermer
+            </button>
+          </div>
+        )}
+
         {/* Header Dashboard */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div>
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               Bienvenue, <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400">{user?.firstName || "Utilisateur"}</span>
             </h1>
-            <p className="text-white/40 text-sm mt-1 font-medium">Votre centre de contrôle de conformité RGPD.</p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-white/40 text-sm font-medium">Votre centre de contrôle de conformité RGPD.</p>
+              {isPro && (
+                <span className="px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/30 rounded-full text-[10px] font-black uppercase">Plan Pro</span>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <Link 
@@ -143,9 +188,11 @@ export default function Dashboard() {
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Risques Détectés</h3>
               <div className="flex items-end gap-3">
                 <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">
-                  {displayAudit.score > 0 ? Math.floor((100 - displayAudit.score) / 5) : 0}
+                  {isPro ? "0" : (displayAudit.score > 0 ? Math.floor((100 - displayAudit.score) / 5) : 0)}
                 </span>
-                <span className="mb-2 px-2 py-1 bg-red-500/10 text-red-400 rounded-lg text-[10px] font-black uppercase">Critique</span>
+                <span className={`mb-2 px-2 py-1 ${isPro ? 'bg-teal-500/10 text-teal-400' : 'bg-red-500/10 text-red-400'} rounded-lg text-[10px] font-black uppercase`}>
+                  {isPro ? "Faible" : "Critique"}
+                </span>
               </div>
               <p className="text-white/40 text-xs italic">Voir les points de vulnérabilité</p>
             </div>
@@ -156,18 +203,25 @@ export default function Dashboard() {
             onClick={() => setActiveModal("statut")}
             className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-blue-500/50 shadow-2xl cursor-pointer"
           >
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all" />
+            <div className={`absolute -right-4 -top-4 w-24 h-24 ${isPro ? 'bg-teal-500/10' : 'bg-blue-500/10'} rounded-full blur-2xl group-hover:opacity-50 transition-all`} />
             <div className="relative space-y-4">
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Statut du Site</h3>
               <div className="flex items-center gap-3 py-2">
-                <div className={`w-3 h-3 rounded-full animate-pulse ${displayAudit.score > 80 ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : displayAudit.score > 50 ? 'bg-orange-400 shadow-[0_0_10px_#fb923c]' : 'bg-red-500 shadow-[0_0_10px_#ef4444]'}`} />
+                <div className={`w-3 h-3 rounded-full animate-pulse ${isPro || displayAudit.score > 80 ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : displayAudit.score > 50 ? 'bg-orange-400 shadow-[0_0_10px_#fb923c]' : 'bg-red-500 shadow-[0_0_10px_#ef4444]'}`} />
                 <span className="text-3xl font-black text-white leading-tight">
-                  {displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme'}
+                  {isPro ? 'Protégé & Conforme' : (displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme')}
                 </span>
               </div>
               <div className="space-y-1">
                 <p className="text-white/40 text-xs italic">Surveillance active 24/7</p>
-                <p className="text-teal-400/60 text-[10px] font-bold uppercase tracking-widest">Mode surveillance PRO requis pour l'analyse automatique</p>
+                {isPro ? (
+                  <p className="text-teal-400/60 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                    Protection Pro Activée
+                  </p>
+                ) : (
+                  <p className="text-teal-400/60 text-[10px] font-bold uppercase tracking-widest">Analyse automatique disponible en PRO</p>
+                )}
               </div>
             </div>
           </div>
@@ -179,9 +233,9 @@ export default function Dashboard() {
             <h3 className="text-lg font-bold text-white tracking-tight">Analyse Détaillée</h3>
             <div className="space-y-6">
               {[
-                { label: "Cookies & Traceurs", val: displayAudit.score > 0 ? displayAudit.score : 0, color: "bg-teal-500" },
-                { label: "Mentions Légales", val: displayAudit.score > 0 ? Math.min(100, displayAudit.score + 10) : 0, color: "bg-blue-500" },
-                { label: "Sécurité des données", val: displayAudit.score > 0 ? Math.max(0, displayAudit.score - 5) : 0, color: "bg-purple-500" }
+                { label: "Cookies & Traceurs", val: displayAudit.score > 0 ? (isPro ? 100 : displayAudit.score) : 0, color: "bg-teal-500" },
+                { label: "Mentions Légales", val: displayAudit.score > 0 ? (isPro ? 100 : Math.min(100, displayAudit.score + 10)) : 0, color: "bg-blue-500" },
+                { label: "Sécurité des données", val: displayAudit.score > 0 ? (isPro ? 100 : Math.max(0, displayAudit.score - 5)) : 0, color: "bg-purple-500" }
               ].map((item, i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-white/60">
@@ -300,16 +354,18 @@ export default function Dashboard() {
         {/* SECTION: Améliorez votre protection (Pricing) */}
         <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
           <div className="text-center space-y-3">
-            <h2 className="text-3xl font-black text-white uppercase tracking-tight">Améliorez votre protection</h2>
-            <p className="text-white/40 text-lg">Choisissez le plan adapté à la croissance de votre entreprise.</p>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tight">Votre Protection</h2>
+            <p className="text-white/40 text-lg">Gérez votre abonnement et améliorez votre conformité.</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-8 w-full">
             {/* Plan 1: OFFRE TEST */}
-            <div className="relative bg-white/5 backdrop-blur-xl border border-teal-500/30 rounded-3xl p-8 flex flex-col space-y-8 hover:border-teal-500/50 transition-all group">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
-                Plan Actuel
-              </div>
+            <div className={`relative bg-white/5 backdrop-blur-xl border ${!isPro ? 'border-teal-500/30' : 'border-white/10'} rounded-3xl p-8 flex flex-col space-y-8 hover:border-teal-500/50 transition-all group`}>
+              {!isPro && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                  Plan Actuel
+                </div>
+              )}
               <div className="space-y-2">
                 <h3 className="text-xl font-bold text-white">OFFRE TEST</h3>
                 <div className="flex items-baseline gap-1">
@@ -328,13 +384,18 @@ export default function Dashboard() {
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-4 rounded-2xl bg-white/5 text-white/40 font-bold cursor-default border border-white/5 uppercase text-xs tracking-widest">
-                Votre Plan Actuel
+              <button className={`w-full py-4 rounded-2xl ${!isPro ? 'bg-white/5 text-white/40 cursor-default' : 'bg-white/5 text-white/20 cursor-not-allowed'} font-bold border border-white/5 uppercase text-xs tracking-widest`}>
+                {!isPro ? "Votre Plan Actuel" : "Inclus dans Pro"}
               </button>
             </div>
 
             {/* Plan 2: Pro */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group shadow-2xl">
+            <div className={`relative bg-white/5 backdrop-blur-xl border ${isPro ? 'border-emerald-500/50' : 'border-white/10'} rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group shadow-2xl`}>
+              {isPro && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg animate-pulse">
+                  Plan Actuel Pro
+                </div>
+              )}
               <div className="space-y-2">
                 <h3 className="text-xl font-bold text-white">Pro</h3>
                 <div className="flex items-baseline gap-1">
@@ -353,38 +414,19 @@ export default function Dashboard() {
                   </li>
                 ))}
               </ul>
-              <button 
-                onClick={async (e) => {
-                  e.preventDefault();
-                  const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO;
-                  
-                  if (!priceId || priceId === 'votre_price_id_pro_ici') {
-                    alert('ERREUR : Vous devez configurer NEXT_PUBLIC_STRIPE_PRICE_ID_PRO dans vos variables d\'environnement Vercel.');
-                    return;
-                  }
-
-                  alert('Étape 1 : Connexion à Stripe avec l\'ID ' + priceId);
-                  try {
-                    const res = await fetch('/api/checkout', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ priceId: priceId }),
-                    });
-                    const data = await res.json();
-                    alert('Étape 2 : Réponse reçue de l\'API');
-                    if (data.url) {
-                      window.location.href = data.url;
-                    } else {
-                      alert('Erreur API : ' + (data.error || 'Pas d\'URL reçue'));
-                    }
-                  } catch (err) {
-                    alert('Erreur fatale (Réseau) : ' + err);
-                  }
-                }}
-                className="w-full py-4 rounded-2xl bg-red-600 text-white font-black hover:bg-red-700 transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-red-500/20"
-              >
-                TESTER LE PAIEMENT PRO (VÉRIFICATION ID)
-              </button>
+              {isPro ? (
+                <button className="w-full py-4 rounded-2xl bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20 uppercase text-xs tracking-widest cursor-default">
+                  Plan Actuel
+                </button>
+              ) : (
+                <button 
+                  onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
+                  disabled={loading}
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20 disabled:opacity-50"
+                >
+                  {loading ? "Chargement..." : "Passer au Plan Pro"}
+                </button>
+              )}
             </div>
 
             {/* Plan 3: Entreprise */}
@@ -451,22 +493,22 @@ export default function Dashboard() {
                         strokeWidth="12" 
                         fill="none"
                         strokeDasharray="251.2"
-                        strokeDashoffset={251.2 - (251.2 * displayAudit.score) / 100}
+                        strokeDashoffset={251.2 - (251.2 * (isPro ? 100 : displayAudit.score)) / 100}
                         strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-4xl font-black text-white">{displayAudit.score}%</span>
+                      <span className="text-4xl font-black text-white">{isPro ? 100 : displayAudit.score}%</span>
                       <span className="text-[10px] text-white/40 uppercase font-bold">Conformité</span>
                     </div>
                   </div>
 
                   <div className="flex-1 space-y-4 w-full">
                     {[
-                      { label: "Consentement", val: 90, color: "bg-teal-500" },
-                      { label: "Mentions Légales", val: 75, color: "bg-blue-500" },
+                      { label: "Consentement", val: isPro ? 100 : 90, color: "bg-teal-500" },
+                      { label: "Mentions Légales", val: isPro ? 100 : 75, color: "bg-blue-500" },
                       { label: "Sécurité SSL", val: 100, color: "bg-purple-500" },
-                      { label: "Gestion Cookies", val: displayAudit.score, color: "bg-orange-500" }
+                      { label: "Gestion Cookies", val: isPro ? 100 : displayAudit.score, color: "bg-orange-500" }
                     ].map((pill, i) => (
                       <div key={i} className="space-y-1">
                         <div className="flex justify-between text-[10px] font-bold text-white/60 uppercase">
@@ -482,7 +524,10 @@ export default function Dashboard() {
                 </div>
 
                 <p className="text-white/60 text-sm leading-relaxed p-6 bg-white/5 rounded-2xl border border-white/5">
-                  Ce score est calculé selon 4 piliers fondamentaux : le **Consentement** explicite, la validité des **Mentions Légales**, la **Sécurité SSL** du domaine et la **Gestion technique des Cookies**.
+                  {isPro 
+                    ? "Votre score est optimal. Toutes les protections sont actives et conformes aux dernières directives de la CNIL." 
+                    : "Ce score est calculé selon 4 piliers fondamentaux : le Consentement explicite, la validité des Mentions Légales, la Sécurité SSL du domaine et la Gestion technique des Cookies."
+                  }
                 </p>
               </div>
             )}
@@ -496,9 +541,9 @@ export default function Dashboard() {
 
                 <div className="space-y-6 py-4">
                   {[
-                    { label: "Risques Critiques", val: displayAudit.score < 80 ? 65 : 20, color: "bg-red-500", desc: "Sanction CNIL immédiate possible" },
-                    { label: "Risques Modérés", val: 45, color: "bg-orange-500", desc: "Mise en demeure sous 30 jours" },
-                    { label: "Risques Mineurs", val: 80, color: "bg-blue-500", desc: "Optimisation de l'expérience utilisateur" }
+                    { label: "Risques Critiques", val: isPro ? 0 : (displayAudit.score < 80 ? 65 : 20), color: isPro ? "bg-teal-500" : "bg-red-500", desc: isPro ? "Aucun risque majeur détecté" : "Sanction CNIL immédiate possible" },
+                    { label: "Risques Modérés", val: isPro ? 0 : 45, color: isPro ? "bg-teal-500" : "bg-orange-500", desc: isPro ? "Tout est sous contrôle" : "Mise en demeure sous 30 jours" },
+                    { label: "Risques Mineurs", val: isPro ? 0 : 80, color: isPro ? "bg-teal-500" : "bg-blue-500", desc: isPro ? "Audit propre" : "Optimisation de l'expérience utilisateur" }
                   ].map((risk, i) => (
                     <div key={i} className="space-y-2">
                       <div className="flex justify-between items-end">
@@ -509,18 +554,25 @@ export default function Dashboard() {
                         <span className={`text-sm font-black ${risk.color.replace('bg-', 'text-')}`}>{risk.val}%</span>
                       </div>
                       <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden p-[2px]">
-                        <div className={`h-full ${risk.color} rounded-full`} style={{ width: `${risk.val}%` }} />
+                        <div className={`h-full ${risk.color} rounded-full transition-all duration-1000`} style={{ width: `${risk.val}%` }} />
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-6 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-200 text-sm leading-relaxed flex gap-4">
-                  <svg className="w-6 h-6 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <p>Attention : Nous avons détecté des failles qui pourraient entraîner des sanctions de la **CNIL** pouvant aller jusqu'à 4% de votre chiffre d'affaires annuel.</p>
-                </div>
+                {isPro ? (
+                  <div className="p-6 bg-teal-500/10 rounded-2xl border border-teal-500/20 text-teal-200 text-sm leading-relaxed flex gap-4">
+                    <svg className="w-6 h-6 shrink-0 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                    <p>Votre site est sous protection active. Les risques de sanctions juridiques sont minimisés au maximum grâce à votre abonnement Pro.</p>
+                  </div>
+                ) : (
+                  <div className="p-6 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-200 text-sm leading-relaxed flex gap-4">
+                    <svg className="w-6 h-6 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p>Attention : Nous avons détecté des failles qui pourraient entraîner des sanctions de la **CNIL** pouvant aller jusqu'à 4% de votre chiffre d'affaires annuel.</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -532,12 +584,12 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center py-12 space-y-6">
-                  <div className={`w-24 h-24 rounded-full flex items-center justify-center animate-pulse ${displayAudit.score > 80 ? 'bg-teal-500/20' : displayAudit.score > 50 ? 'bg-orange-500/20' : 'bg-red-500/20'}`}>
-                    <div className={`w-12 h-12 rounded-full ${displayAudit.score > 80 ? 'bg-teal-500' : displayAudit.score > 50 ? 'bg-orange-500' : 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)]'}`} />
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center animate-pulse ${isPro || displayAudit.score > 80 ? 'bg-teal-500/20' : displayAudit.score > 50 ? 'bg-orange-500/20' : 'bg-red-500/20'}`}>
+                    <div className={`w-12 h-12 rounded-full ${isPro || displayAudit.score > 80 ? 'bg-teal-500' : displayAudit.score > 50 ? 'bg-orange-500' : 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)]'}`} />
                   </div>
                   <div className="text-center space-y-2">
                     <span className="text-4xl font-black text-white block uppercase tracking-tight">
-                      {displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme'}
+                      {isPro ? 'Protégé & Conforme' : (displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme')}
                     </span>
                     <p className="text-white/40 font-medium">Votre site est actuellement sous surveillance active.</p>
                   </div>
@@ -550,7 +602,7 @@ export default function Dashboard() {
                   </div>
                   <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
                     <span className="text-xs text-white/40 block mb-1">Fréquence scan</span>
-                    <span className="text-sm font-bold text-teal-400">Toutes les 24h</span>
+                    <span className="text-sm font-bold text-teal-400">{isPro ? "Temps réel" : "Toutes les 24h"}</span>
                   </div>
                 </div>
 
@@ -563,5 +615,13 @@ export default function Dashboard() {
         </Dialog.Portal>
       </Dialog.Root>
     </main>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Chargement du Dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
