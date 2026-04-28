@@ -306,9 +306,9 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white">Audit instantané</h3>
+                  <h3 className="text-xl font-bold text-white">Scan en temps réel</h3>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Notre algorithme analyse le code source de votre page d'accueil en temps réel pour détecter les scripts.
+                    Nous analysons instantanément les scripts et cookies actifs sur votre page.
                   </p>
                 </div>
 
@@ -319,9 +319,9 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white">Diagnostic RGPD</h3>
+                  <h3 className="text-xl font-bold text-white">Vérification Juridique</h3>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Nous vérifions la présence obligatoire du bandeau cookie et de la politique de confidentialité conforme.
+                    Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
                   </p>
                 </div>
 
@@ -332,9 +332,9 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white">Rapport de conformité</h3>
+                  <h3 className="text-xl font-bold text-white">Plan d'Action</h3>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Recevez un score détaillé et les actions correctives précises pour éviter les sanctions de la CNIL.
+                    Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
                   </p>
                 </div>
               </div>

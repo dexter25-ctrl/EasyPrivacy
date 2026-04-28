@@ -30,30 +30,33 @@ export default function PolitiqueConfidentialite() {
         {/* Content */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8 text-white/70 leading-relaxed">
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. Collecte des données</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. COLLECTE DES DONNÉES</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.
+              Nous collectons votre adresse e-mail uniquement lorsque vous demandez l'envoi d'un rapport complet d'audit. L'URL du site analysé est également conservée pour générer les statistiques de conformité.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. Utilisation des données</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. UTILISATION DES DONNÉES</h2>
             <p>
-              Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor.
+              Vos données sont utilisées exclusivement pour :<br /><br />
+              • Vous envoyer votre rapport d'audit.<br />
+              • Vous proposer des solutions de mise en conformité adaptées.<br /><br />
+              Nous ne vendons, ne louons et ne partageons jamais vos données avec des tiers.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. Protection des données</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. VOS DROITS (RGPD)</h2>
             <p>
-              Quisque congue tristique eros. In turpis. Integer aliquet adpiscing mi. Donec vulputate nunc. Vivamus ac sodales dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.
+              Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour l'exercer, contactez-nous à : <strong>[TON EMAIL]</strong>.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. Vos droits</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. COOKIES</h2>
             <p>
-              Nulla facilisi. Séd sit amet felis ac purus elementum tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ut sem. Donec nec erat. Curabitur elementum ultrices diam.
+              Le site EasyPrivacy utilise des cookies techniques nécessaires à son bon fonctionnement et à l'analyse de votre navigation de manière anonyme.
             </p>
           </section>
         </div>

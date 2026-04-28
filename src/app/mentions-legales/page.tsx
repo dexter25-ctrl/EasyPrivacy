@@ -30,30 +30,33 @@ export default function MentionsLegales() {
         {/* Content */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8 text-white/70 leading-relaxed">
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. Présentation du site</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. PRÉSENTATION DU SITE</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.
+              En vertu de l'article 6 de la loi n° 2004-575 du 21 juin 2004, il est précisé aux utilisateurs du site EasyPrivacy l'identité des différents intervenants dans le cadre de sa réalisation :<br />
+              <strong>Propriétaire / Éditeur :</strong> [TON PRÉNOM ET NOM]<br />
+              <strong>Statut :</strong> Auto-entrepreneur (en cours de formation)<br />
+              <strong>Contact :</strong> [TON EMAIL]
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. Hébergement</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. HÉBERGEMENT</h2>
             <p>
-              Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor.
+              Le site est hébergé par Vercel Inc., situé au 340 S Lemon Ave #1142, Walnut, CA 91789, USA.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. Propriété intellectuelle</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. PROPRIÉTÉ INTELLECTUELLE</h2>
             <p>
-              Quisque congue tristique eros. In turpis. Integer aliquet adpiscing mi. Donec vulputate nunc. Vivamus ac sodales dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.
+              L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. Responsabilité</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. LIMITATION DE RESPONSABILITÉ</h2>
             <p>
-              Nulla facilisi. Séd sit amet felis ac purus elementum tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ut sem. Donec nec erat. Curabitur elementum ultrices diam.
+              EasyPrivacy fournit un score de conformité à titre indicatif basé sur une analyse automatisée. Cet audit ne remplace en aucun cas l'avis d'un avocat spécialisé ou d'un expert juridique agréé.
             </p>
           </section>
         </div>
