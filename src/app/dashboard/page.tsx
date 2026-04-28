@@ -28,7 +28,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleSendEmail = (e: React.FormEvent) => {
     e.preventDefault();
     const mailtoUrl = `mailto:dextoolstudio@gmail.com?subject=${encodeURIComponent(contactSubject)}&body=${encodeURIComponent(contactMessage)}`;
     window.location.href = mailtoUrl;
@@ -187,7 +187,7 @@ export default function Dashboard() {
                 <p className="text-white/40 text-xs">Experts disponibles en moins de 6h.</p>
               </div>
             </div>
-            <form onSubmit={handleContactSubmit} className="space-y-4">
+            <form onSubmit={handleSendEmail} className="space-y-4">
               <input 
                 type="text" 
                 required
@@ -204,12 +204,17 @@ export default function Dashboard() {
                 rows={3}
                 className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-teal-500 transition-all outline-none resize-none"
               />
-              <button 
-                type="submit"
-                className="w-full bg-white text-slate-950 font-black py-3 rounded-xl hover:bg-teal-400 hover:text-slate-900 transition-all shadow-xl uppercase text-xs tracking-widest"
-              >
-                Envoyer au Support
-              </button>
+              <div className="space-y-3">
+                <button 
+                  type="submit"
+                  className="w-full bg-white text-slate-950 font-black py-3 rounded-xl hover:bg-teal-400 hover:text-slate-900 transition-all shadow-xl uppercase text-xs tracking-widest"
+                >
+                  Envoyer au Support
+                </button>
+                <p className="text-[10px] text-white/30 text-center italic">
+                  Ceci ouvrira votre application de messagerie pour nous envoyer le mail directement.
+                </p>
+              </div>
             </form>
           </div>
         </div>
