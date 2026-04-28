@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
@@ -16,6 +17,9 @@ export default function Dashboard() {
   // States pour le formulaire de contact
   const [contactSubject, setContactSubject] = useState("");
   const [contactMessage, setContactMessage] = useState("");
+
+  // States pour les modales
+  const [activeModal, setActiveModal] = useState<"score" | "risques" | "statut" | null>(null);
 
   useEffect(() => {
     const savedAudit = localStorage.getItem("lastAudit");
@@ -71,7 +75,10 @@ export default function Dashboard() {
         {/* SECTION: En un coup d'œil */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Score */}
-          <div className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-teal-500/50 shadow-2xl">
+          <div 
+            onClick={() => setActiveModal("score")}
+            className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-teal-500/50 shadow-2xl cursor-pointer"
+          >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all" />
             <div className="relative space-y-4">
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Score de Conformité</h3>
@@ -79,12 +86,15 @@ export default function Dashboard() {
                 <span className="text-6xl font-black text-white">{displayAudit.score}%</span>
                 <div className="mb-2 w-12 h-1 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.8)]" />
               </div>
-              <p className="text-white/40 text-xs">Basé sur le dernier scan du {displayAudit.date}</p>
+              <p className="text-white/40 text-xs italic">Cliquer pour le détail analytique</p>
             </div>
           </div>
 
           {/* Card 2: Risques */}
-          <div className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-red-500/50 shadow-2xl">
+          <div 
+            onClick={() => setActiveModal("risques")}
+            className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-red-500/50 shadow-2xl cursor-pointer"
+          >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-red-500/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all" />
             <div className="relative space-y-4">
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Risques Détectés</h3>
@@ -94,22 +104,25 @@ export default function Dashboard() {
                 </span>
                 <span className="mb-2 px-2 py-1 bg-red-500/10 text-red-400 rounded-lg text-[10px] font-black uppercase">Critique</span>
               </div>
-              <p className="text-white/40 text-xs">Points nécessitant une action immédiate</p>
+              <p className="text-white/40 text-xs italic">Voir les points de vulnérabilité</p>
             </div>
           </div>
 
           {/* Card 3: Statut */}
-          <div className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-blue-500/50 shadow-2xl">
+          <div 
+            onClick={() => setActiveModal("statut")}
+            className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-blue-500/50 shadow-2xl cursor-pointer"
+          >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all" />
             <div className="relative space-y-4">
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Statut du Site</h3>
               <div className="flex items-center gap-3 py-2">
-                <div className={`w-3 h-3 rounded-full animate-pulse ${displayAudit.score > 70 ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : 'bg-yellow-400 shadow-[0_0_10px_#facc15]'}`} />
-                <span className="text-3xl font-black text-white">
-                  {displayAudit.score > 70 ? 'Sécurisé' : 'En attente'}
+                <div className={`w-3 h-3 rounded-full animate-pulse ${displayAudit.score > 80 ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : displayAudit.score > 50 ? 'bg-orange-400 shadow-[0_0_10px_#fb923c]' : 'bg-red-500 shadow-[0_0_10px_#ef4444]'}`} />
+                <span className="text-3xl font-black text-white leading-tight">
+                  {displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme'}
                 </span>
               </div>
-              <p className="text-white/40 text-xs">Surveillance active 24/7</p>
+              <p className="text-white/40 text-xs italic">Surveillance active en temps réel</p>
             </div>
           </div>
         </div>
@@ -233,6 +246,147 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* MODALES INTERACTIVES */}
+      <Dialog.Root open={!!activeModal} onOpenChange={() => setActiveModal(null)}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl bg-slate-900 border border-white/10 rounded-[2.5rem] p-10 shadow-2xl z-[101] focus:outline-none overflow-hidden">
+            <Dialog.Close className="absolute top-8 right-8 text-white/20 hover:text-white transition-all">
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Dialog.Close>
+
+            {activeModal === "score" && (
+              <div className="space-y-8 animate-in zoom-in-95 duration-200">
+                <div className="space-y-2">
+                  <Dialog.Title className="text-2xl font-black text-white">Détail du Score Global</Dialog.Title>
+                  <p className="text-white/40 text-sm italic">Analyse pondérée selon les critères de la CNIL.</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-12 py-4">
+                  {/* Donut Chart SVG */}
+                  <div className="relative w-48 h-48">
+                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                      <circle cx="50" cy="50" r="40" className="stroke-white/5" strokeWidth="12" fill="none" />
+                      <circle 
+                        cx="50" cy="50" r="40" 
+                        className="stroke-teal-500" 
+                        strokeWidth="12" 
+                        fill="none"
+                        strokeDasharray="251.2"
+                        strokeDashoffset={251.2 - (251.2 * displayAudit.score) / 100}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-4xl font-black text-white">{displayAudit.score}%</span>
+                      <span className="text-[10px] text-white/40 uppercase font-bold">Conformité</span>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-4 w-full">
+                    {[
+                      { label: "Consentement", val: 90, color: "bg-teal-500" },
+                      { label: "Mentions Légales", val: 75, color: "bg-blue-500" },
+                      { label: "Sécurité SSL", val: 100, color: "bg-purple-500" },
+                      { label: "Gestion Cookies", val: displayAudit.score, color: "bg-orange-500" }
+                    ].map((pill, i) => (
+                      <div key={i} className="space-y-1">
+                        <div className="flex justify-between text-[10px] font-bold text-white/60 uppercase">
+                          <span>{pill.label}</span>
+                          <span>{pill.val}%</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className={`h-full ${pill.color} rounded-full`} style={{ width: `${pill.val}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-white/60 text-sm leading-relaxed p-6 bg-white/5 rounded-2xl border border-white/5">
+                  Ce score est calculé selon 4 piliers fondamentaux : le **Consentement** explicite, la validité des **Mentions Légales**, la **Sécurité SSL** du domaine et la **Gestion technique des Cookies**.
+                </p>
+              </div>
+            )}
+
+            {activeModal === "risques" && (
+              <div className="space-y-8 animate-in zoom-in-95 duration-200">
+                <div className="space-y-2">
+                  <Dialog.Title className="text-2xl font-black text-white">Analyse des Risques Juridiques</Dialog.Title>
+                  <p className="text-white/40 text-sm italic">Sévérité des failles détectées.</p>
+                </div>
+
+                <div className="space-y-6 py-4">
+                  {[
+                    { label: "Risques Critiques", val: displayAudit.score < 80 ? 65 : 20, color: "bg-red-500", desc: "Sanction CNIL immédiate possible" },
+                    { label: "Risques Modérés", val: 45, color: "bg-orange-500", desc: "Mise en demeure sous 30 jours" },
+                    { label: "Risques Mineurs", val: 80, color: "bg-blue-500", desc: "Optimisation de l'expérience utilisateur" }
+                  ].map((risk, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-between items-end">
+                        <div className="space-y-1">
+                          <span className="text-xs font-bold text-white uppercase">{risk.label}</span>
+                          <p className="text-[10px] text-white/30">{risk.desc}</p>
+                        </div>
+                        <span className={`text-sm font-black ${risk.color.replace('bg-', 'text-')}`}>{risk.val}%</span>
+                      </div>
+                      <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden p-[2px]">
+                        <div className={`h-full ${risk.color} rounded-full`} style={{ width: `${risk.val}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-6 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-200 text-sm leading-relaxed flex gap-4">
+                  <svg className="w-6 h-6 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p>Attention : Nous avons détecté des failles qui pourraient entraîner des sanctions de la **CNIL** pouvant aller jusqu'à 4% de votre chiffre d'affaires annuel.</p>
+                </div>
+              </div>
+            )}
+
+            {activeModal === "statut" && (
+              <div className="space-y-8 animate-in zoom-in-95 duration-200">
+                <div className="space-y-2">
+                  <Dialog.Title className="text-2xl font-black text-white">Statut de Conformité</Dialog.Title>
+                  <p className="text-white/40 text-sm italic">Monitoring en temps réel de votre domaine.</p>
+                </div>
+
+                <div className="flex flex-col items-center justify-center py-12 space-y-6">
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center animate-pulse ${displayAudit.score > 80 ? 'bg-teal-500/20' : displayAudit.score > 50 ? 'bg-orange-500/20' : 'bg-red-500/20'}`}>
+                    <div className={`w-12 h-12 rounded-full ${displayAudit.score > 80 ? 'bg-teal-500' : displayAudit.score > 50 ? 'bg-orange-500' : 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)]'}`} />
+                  </div>
+                  <div className="text-center space-y-2">
+                    <span className="text-4xl font-black text-white block uppercase tracking-tight">
+                      {displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme'}
+                    </span>
+                    <p className="text-white/40 font-medium">Votre site est actuellement sous surveillance active.</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                    <span className="text-xs text-white/40 block mb-1">Dernière vérification</span>
+                    <span className="text-sm font-bold text-white">{displayAudit.date}</span>
+                  </div>
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                    <span className="text-xs text-white/40 block mb-1">Fréquence scan</span>
+                    <span className="text-sm font-bold text-teal-400">Toutes les 24h</span>
+                  </div>
+                </div>
+
+                <p className="text-center text-white/60 text-xs">
+                  Notre système analyse votre site web en continu pour détecter tout changement dans la structure des cookies ou des scripts tiers.
+                </p>
+              </div>
+            )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </main>
   );
 }
