@@ -30,31 +30,28 @@ export default function PolitiqueConfidentialite() {
         {/* Content */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8 text-white/70 leading-relaxed">
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. COLLECTE DES DONNÉES</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">RESPONSABLE DU TRAITEMENT</h2>
             <p>
-              Nous collectons votre adresse e-mail uniquement lorsque vous demandez l'envoi d'un rapport complet d'audit. L'URL du site analysé est également conservée pour générer les statistiques de conformité.
+              Le responsable du traitement des données est <strong>Kaufmann Dejan</strong> (<a href="mailto:dextoolstudio@gmail.com" className="text-blue-400 hover:underline">dextoolstudio@gmail.com</a>).
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. UTILISATION DES DONNÉES</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">DONNÉES COLLECTÉES</h2>
             <p>
-              Vos données sont utilisées exclusivement pour :<br /><br />
-              • Vous envoyer votre rapport d'audit.<br />
-              • Vous proposer des solutions de mise en conformité adaptées.<br /><br />
-              Nous ne vendons, ne louons et ne partageons jamais vos données avec des tiers.
+              Nous collectons uniquement votre e-mail pour l'envoi du rapport d'audit et l'URL du site analysé. Ces données sont conservées pour une durée maximale de 3 ans après votre dernière interaction.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. VOS DROITS (RGPD)</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">VOS DROITS</h2>
             <p>
-              Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour l'exercer, contactez-nous à : <strong>[TON EMAIL]</strong>.
+              Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour toute demande, envoyez un e-mail à <a href="mailto:dextoolstudio@gmail.com" className="text-blue-400 hover:underline">dextoolstudio@gmail.com</a>. Nous nous engageons à vous répondre sous 48h.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. COOKIES</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">COOKIES</h2>
             <p>
               Le site EasyPrivacy utilise des cookies techniques nécessaires à son bon fonctionnement et à l'analyse de votre navigation de manière anonyme.
             </p>

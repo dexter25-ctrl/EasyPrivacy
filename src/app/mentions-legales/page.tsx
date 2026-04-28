@@ -30,33 +30,31 @@ export default function MentionsLegales() {
         {/* Content */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8 text-white/70 leading-relaxed">
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">1. PRÉSENTATION DU SITE</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">ÉDITEUR DU SITE</h2>
             <p>
-              En vertu de l'article 6 de la loi n° 2004-575 du 21 juin 2004, il est précisé aux utilisateurs du site EasyPrivacy l'identité des différents intervenants dans le cadre de sa réalisation :<br />
-              <strong>Propriétaire / Éditeur :</strong> [TON PRÉNOM ET NOM]<br />
-              <strong>Statut :</strong> Auto-entrepreneur (en cours de formation)<br />
-              <strong>Contact :</strong> [TON EMAIL]
+              Le site EasyPrivacy est édité par <strong>Kaufmann Dejan</strong>, entrepreneur individuel, domicilié en France.<br />
+              <strong>Email :</strong> <a href="mailto:dextoolstudio@gmail.com" className="text-teal-400 hover:underline">dextoolstudio@gmail.com</a>
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">2. HÉBERGEMENT</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">HÉBERGEMENT</h2>
             <p>
-              Le site est hébergé par Vercel Inc., situé au 340 S Lemon Ave #1142, Walnut, CA 91789, USA.
+              Le site est hébergé par la société <strong>Vercel Inc.</strong>, située au 340 S Lemon Ave #1142, Walnut, CA 91789, USA. Site web : <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline">https://vercel.com</a>
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">3. PROPRIÉTÉ INTELLECTUELLE</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">PROPRIÉTÉ INTELLECTUELLE</h2>
             <p>
-              L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés.
+              <strong>Kaufmann Dejan</strong> est propriétaire des droits de propriété intellectuelle sur tous les éléments accessibles sur le site (textes, images, graphismes, logo, icônes). Toute reproduction ou adaptation est interdite sans autorisation écrite préalable.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white uppercase tracking-wider">4. LIMITATION DE RESPONSABILITÉ</h2>
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider">RESPONSABILITÉ</h2>
             <p>
-              EasyPrivacy fournit un score de conformité à titre indicatif basé sur une analyse automatisée. Cet audit ne remplace en aucun cas l'avis d'un avocat spécialisé ou d'un expert juridique agréé.
+              EasyPrivacy propose un outil d'analyse automatisé. Les résultats sont fournis à titre informatif et ne constituent pas un conseil juridique formel. <strong>Kaufmann Dejan</strong> ne pourra être tenu responsable des décisions prises sur la base de cet audit.
             </p>
           </section>
         </div>
