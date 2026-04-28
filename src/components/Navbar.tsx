@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { SignInButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
@@ -24,6 +26,7 @@ export default function Navbar() {
               </button>
             </SignInButton>
           </SignedOut>
+          
           <SignedIn>
             <div className="flex items-center gap-6">
               <Link 
