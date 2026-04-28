@@ -323,7 +323,7 @@ export default function Home() {
                       href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
                       className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center"
                     >
-                      ME CONTACTER
+                      CONTACTER NOTRE ÉQUIPE
                     </Link>
                     <button
                       onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
@@ -417,7 +417,7 @@ export default function Home() {
                     onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
-                    Essayer gratuitement
+                    DÉBUTER GRATUITEMENT
                   </button>
                 </div>
 
@@ -445,7 +445,7 @@ export default function Home() {
                     onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
-                    Choisir ce plan
+                    DÉMARRER CE PLAN
                   </button>
                 </div>
 
@@ -474,9 +474,9 @@ export default function Home() {
                   </ul>
                   <button 
                     onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
-                    className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center"
+                    className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center"
                   >
-                    Passer à l'Entreprise
+                    DÉMARRER AVEC L'ENTREPRISE
                   </button>
                 </div>
               </div>
