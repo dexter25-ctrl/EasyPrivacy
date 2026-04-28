@@ -19,13 +19,16 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/Navbar";
 
+import { ClerkProvider } from "@clerk/nextjs";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <ClerkProvider>
+      <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-[#0f172a] via-[#113247] to-[#042f2e] text-white selection:bg-teal-500/30 pt-20`}
       >
@@ -33,5 +36,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </ClerkProvider>
   );
 }

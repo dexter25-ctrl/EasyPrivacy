@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
+  const { user } = useUser();
+  
   // Données simulées pour l'interface
   const [lastAudit] = useState({
     score: 68,
@@ -28,7 +31,7 @@ export default function Dashboard() {
         {/* Header Dashboard */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/10 pb-8">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tight">Mon Dashboard</h1>
+            <h1 className="text-3xl font-black text-white tracking-tight">Bienvenue, {user?.firstName}</h1>
             <p className="text-white/40 text-sm mt-1">Gérez la conformité de vos projets en temps réel.</p>
           </div>
           <Link 

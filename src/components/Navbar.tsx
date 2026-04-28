@@ -1,13 +1,7 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
+import { SignInButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Navbar() {
-  // Simulation de l'état de connexion pour le test visuel
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("Kaufmann");
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -23,14 +17,14 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="flex items-center gap-6">
-          {!isLoggedIn ? (
-            <button 
-              onClick={() => setIsLoggedIn(true)}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all"
-            >
-              Connexion
-            </button>
-          ) : (
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all">
+                Connexion
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
             <div className="flex items-center gap-6">
               <Link 
                 href="/dashboard" 
@@ -38,21 +32,17 @@ export default function Navbar() {
               >
                 Mon Dashboard
               </Link>
-              <div className="flex items-center gap-3 bg-white/5 border border-teal-500/20 px-4 py-2 rounded-xl">
-                <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></div>
-                <span className="text-sm font-bold text-white">{userName}</span>
-                <button 
-                  onClick={() => setIsLoggedIn(false)}
-                  className="ml-2 text-white/40 hover:text-red-400 transition-colors"
-                  title="Déconnexion"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </button>
+              <div className="flex items-center gap-3 bg-white/5 border border-teal-500/20 px-2 py-1.5 rounded-xl">
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "w-8 h-8 rounded-lg"
+                    }
+                  }}
+                />
               </div>
             </div>
-          )}
+          </SignedIn>
         </div>
       </div>
     </nav>
