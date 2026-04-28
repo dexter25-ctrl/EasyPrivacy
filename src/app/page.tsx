@@ -1,11 +1,14 @@
 "use client";
 
-// Déploiement Clerk v1.0 - Intégration de l'authentification sécurisée
-
 import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
+  const router = useRouter();
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,14 +71,29 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setResult({
+      const auditResult = {
         score: data.score,
         criticalPoints: data.criticalPoints,
-      });
+        url: url,
+        date: new Date().toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' })
+      };
+      
+      setResult(auditResult);
+      
+      // Sauvegarder dans le localStorage pour le dashboard
+      localStorage.setItem("lastAudit", JSON.stringify(auditResult));
     } catch (err: any) {
       setError(err.message || "Impossible d'effectuer l'audit pour le moment.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePricingClick = () => {
+    if (!user) {
+      openSignIn();
+    } else {
+      router.push("/dashboard");
     }
   };
 
@@ -376,7 +394,10 @@ export default function Home() {
                     ))}
                   </ul>
 
-                  <button className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all">
+                  <button 
+                    onClick={handlePricingClick}
+                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all"
+                  >
                     Commencer
                   </button>
                 </div>
@@ -415,7 +436,10 @@ export default function Home() {
                     ))}
                   </ul>
 
-                  <button className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all">
+                  <button 
+                    onClick={handlePricingClick}
+                    className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all"
+                  >
                     Sécuriser mon site
                   </button>
                 </div>

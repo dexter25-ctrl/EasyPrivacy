@@ -1,25 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
   const { user } = useUser();
-  
-  // Données simulées pour l'interface
-  const [lastAudit] = useState({
-    score: 68,
-    date: "28 Avril 2026",
-    url: "monsite-ecommerce.fr",
-  });
+  const [lastAudit, setLastAudit] = useState<{
+    score: number;
+    date: string;
+    url: string;
+    criticalPoints: string[];
+  } | null>(null);
 
-  const [criticalPoints] = useState([
-    "Bandeau de consentement aux cookies non conforme",
-    "Absence de lien vers la Politique de Confidentialité dans le footer",
-    "Traceurs Google Analytics activés avant le consentement",
-    "Formulaire de contact sans case à cocher RGPD",
-  ]);
+  useEffect(() => {
+    const savedAudit = localStorage.getItem("lastAudit");
+    if (savedAudit) {
+      setLastAudit(JSON.parse(savedAudit));
+    }
+  }, []);
+
+  // Données par défaut si aucun audit n'a été fait
+  const displayAudit = lastAudit || {
+    score: 0,
+    date: "Aucun audit récent",
+    url: "Scannez votre premier site",
+    criticalPoints: [
+      "Effectuez un audit sur la page d'accueil pour voir les résultats ici.",
+      "Le score de conformité s'affichera dynamiquement.",
+      "Vous recevrez des conseils personnalisés après analyse."
+    ],
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 sm:p-24 relative overflow-hidden bg-slate-950">
@@ -31,7 +42,9 @@ export default function Dashboard() {
         {/* Header Dashboard */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/10 pb-8">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tight">Bienvenue, {user?.firstName}</h1>
+            <h1 className="text-3xl font-black text-white tracking-tight">
+              Espace de conformité de {user?.firstName || "Chargement..."}
+            </h1>
             <p className="text-white/40 text-sm mt-1">Gérez la conformité de vos projets en temps réel.</p>
           </div>
           <Link 
@@ -39,9 +52,9 @@ export default function Dashboard() {
             className="bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-slate-900 font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Lancer un nouveau scan
+            Nouvel Audit
           </Link>
         </div>
 
@@ -58,19 +71,19 @@ export default function Dashboard() {
                     cx="48"
                     cy="48"
                     r="40"
-                    className="stroke-teal-400 transition-all duration-1000"
+                    className={`${displayAudit.score > 70 ? 'stroke-teal-400' : displayAudit.score > 40 ? 'stroke-yellow-400' : 'stroke-red-400'} transition-all duration-1000`}
                     strokeWidth="8"
                     fill="none"
                     strokeDasharray="251.2"
-                    strokeDashoffset={251.2 - (251.2 * lastAudit.score) / 100}
+                    strokeDashoffset={251.2 - (251.2 * displayAudit.score) / 100}
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="absolute text-2xl font-black">{lastAudit.score}</span>
+                <span className="absolute text-2xl font-black">{displayAudit.score}</span>
               </div>
               <div>
-                <p className="text-white font-bold">{lastAudit.url}</p>
-                <p className="text-white/40 text-xs">Scan du {lastAudit.date}</p>
+                <p className="text-white font-bold truncate max-w-[150px]">{displayAudit.url}</p>
+                <p className="text-white/40 text-xs">Scan du {displayAudit.date}</p>
               </div>
             </div>
             <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold transition-all uppercase tracking-widest">
@@ -82,17 +95,17 @@ export default function Dashboard() {
           <div className="md:col-span-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6">
             <div className="flex justify-between items-center">
               <h3 className="text-white/60 font-bold uppercase tracking-widest text-xs">Points critiques à corriger</h3>
-              <span className="bg-red-500/20 text-red-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">
-                {criticalPoints.length} Alertes
+              <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${displayAudit.score > 70 ? 'bg-teal-500/20 text-teal-400' : 'bg-red-500/20 text-red-400'}`}>
+                {displayAudit.criticalPoints.length} Alertes
               </span>
             </div>
             
             <div className="space-y-4">
-              {criticalPoints.map((point, index) => (
-                <div key={index} className="flex items-start gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 group hover:border-red-500/30 transition-all">
-                  <div className="w-5 h-5 bg-red-500/10 rounded flex items-center justify-center shrink-0 mt-0.5">
-                    <svg className="w-3 h-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+              {displayAudit.criticalPoints.map((point, index) => (
+                <div key={index} className="flex items-start gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 group hover:border-teal-500/30 transition-all">
+                  <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 mt-0.5 ${displayAudit.score > 0 ? 'bg-red-500/10' : 'bg-teal-500/10'}`}>
+                    <svg className={`w-3 h-3 ${displayAudit.score > 0 ? 'text-red-400' : 'text-teal-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d={displayAudit.score > 0 ? "M6 18L18 6M6 6l12 12" : "M5 13l4 4L19 7"} />
                     </svg>
                   </div>
                   <span className="text-white/80 text-sm leading-relaxed group-hover:text-white transition-colors">{point}</span>
