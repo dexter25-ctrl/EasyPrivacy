@@ -325,12 +325,12 @@ export default function Home() {
                     >
                       CONTACTER NOTRE ÉQUIPE
                     </Link>
-                    <button
-                      onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
+                    <Link
+                      href="/dashboard"
                       className="text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest cursor-pointer"
                     >
                       Voir nos offres de mise en conformité
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -386,17 +386,17 @@ export default function Home() {
             </div>
 
             {/* Pricing Section */}
-            <div id="tarifs" className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+            <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
               <div className="text-center space-y-3">
                 <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Passez aux normes dès aujourd'hui</h2>
                 <p className="text-white/60 text-lg">Choisissez la protection adaptée à votre entreprise.</p>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                {/* Plan 1: Gratuit */}
+                {/* Plan 1: OFFRE TEST */}
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group">
                   <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-white">Gratuit</h3>
+                    <h3 className="text-xl font-bold text-white">OFFRE TEST</h3>
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-black text-white">0€</span>
                       <span className="text-white/40 text-sm font-medium">/ à vie</span>
@@ -590,12 +590,12 @@ export default function Home() {
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
+                <Link 
+                  href="/dashboard"
                   className="text-white/60 hover:text-teal-400 transition-colors text-sm"
                 >
                   Tarifs
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

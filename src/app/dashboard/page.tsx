@@ -130,7 +130,7 @@ export default function Dashboard() {
                     href="/" 
                     className="inline-block bg-gradient-to-r from-teal-500 to-blue-500 text-slate-900 font-black px-8 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-teal-500/20"
                   >
-                    LANCER MON PREMIER AUDIT GRATUIT
+                    LANCER MON PREMIER AUDIT (TEST)
                   </Link>
                 </div>
               )}
