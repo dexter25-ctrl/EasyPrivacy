@@ -141,9 +141,12 @@ export default function Dashboard() {
               <p className="text-white/40 text-sm">Nos experts sont disponibles pour une mise en conformité éclair.</p>
             </div>
           </div>
-          <button className="whitespace-nowrap bg-white text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl">
+          <a 
+            href="mailto:dextoolstudio@gmail.com?subject=Demande de rendez-vous - EasyPrivacy"
+            className="whitespace-nowrap bg-white text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl"
+          >
             PRENDRE RENDEZ-VOUS
-          </button>
+          </a>
         </div>
       </div>
     </main>
