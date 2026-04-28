@@ -3,11 +3,20 @@ import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16' as any, // Version stable
-});
+// Initialisation sécurisée qui ne plante pas au build
+const getStripe = () => {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey) return null;
+  return new Stripe(apiKey, { apiVersion: '2023-10-16' as any });
+};
 
 export async function POST(req: Request) {
+  const stripe = getStripe();
+  if (!stripe) {
+    console.error('Stripe API key is missing');
+    return NextResponse.json({ error: 'Stripe key missing' }, { status: 500 });
+  }
+
   try {
     const { priceId } = await req.json();
     
@@ -23,10 +32,10 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://easy-privacy.vercel.app'}/dashboard?canceled=true`,
     });
 
-    // On retourne l'URL pour une redirection directe (plus robuste)
-    return NextResponse.json({ url: session.url });
+    // On retourne l'URL pour une redirection directe (plus simple pour le frontend actuel)
+    return NextResponse.json({ url: session.url, sessionId: session.id });
   } catch (err: any) {
-    console.error('STRIPE_ERROR:', err);
+    console.error('STRIPE_CHECKOUT_ERROR:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
