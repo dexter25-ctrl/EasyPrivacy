@@ -25,6 +25,13 @@ export default function Home() {
   const [modalEmail, setModalEmail] = useState("");
   const [modalSuccess, setModalSuccess] = useState(false);
 
+  // Pré-remplir l'email si l'utilisateur est connecté
+  useEffect(() => {
+    if (user?.primaryEmailAddress?.emailAddress) {
+      setModalEmail(user.primaryEmailAddress.emailAddress);
+    }
+  }, [user]);
+
   // Simulation de messages de chargement réalistes
   useEffect(() => {
     if (loading) {
@@ -91,22 +98,23 @@ export default function Home() {
 
   const handlePricingClick = () => {
     if (!user) {
-      openSignIn();
+      router.push("/sign-up");
     } else {
       router.push("/dashboard");
     }
   };
 
-  const handleUnlock = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
+  const handleUnlock = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (email || user) {
       setIsUnlocked(true);
     }
   };
 
   const handleModalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!modalEmail || !result) return;
+    const emailToSend = user?.primaryEmailAddress?.emailAddress || modalEmail;
+    if (!emailToSend || !result) return;
 
     try {
       await fetch("https://script.google.com/macros/s/AKfycbwLJQxpc6ggHKHZlRqW9JiSN77CfInyWw4Rqtz7dbKy0_wXtWHIvuwA8FYJpIbNM57-/exec", {
@@ -114,7 +122,7 @@ export default function Home() {
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: modalEmail,
+          email: emailToSend,
           url: url,
           score: result.score
         })
@@ -254,21 +262,37 @@ export default function Home() {
                       </div>
                       <div>
                         <h3 className="text-white font-bold text-lg mb-2">Débloquer votre rapport</h3>
-                        <p className="text-white/60 text-sm">Entrez votre email pour recevoir les détails de votre audit et les solutions correctives.</p>
+                        {user ? (
+                          <p className="text-teal-400 text-sm font-medium">
+                            Connecté en tant que <span className="text-white">{user.primaryEmailAddress?.emailAddress}</span>. <br/>Le rapport vous sera envoyé directement.
+                          </p>
+                        ) : (
+                          <p className="text-white/60 text-sm">Entrez votre email pour recevoir les détails de votre audit et les solutions correctives.</p>
+                        )}
                       </div>
-                      <form onSubmit={handleUnlock} className="space-y-3">
-                        <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="votre@email.com"
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50"
-                        />
-                        <button type="submit" className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20">
-                          VOIR LES RÉSULTATS
+                      
+                      {!user ? (
+                        <form onSubmit={handleUnlock} className="space-y-3">
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="votre@email.com"
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                          />
+                          <button type="submit" className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20">
+                            VOIR LES RÉSULTATS
+                          </button>
+                        </form>
+                      ) : (
+                        <button 
+                          onClick={() => handleUnlock()}
+                          className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20"
+                        >
+                          DÉCOUVRIR MES RÉSULTATS
                         </button>
-                      </form>
+                      )}
                     </div>
                   </div>
                 )}
