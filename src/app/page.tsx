@@ -84,9 +84,9 @@ export default function Home() {
         url: url,
         date: new Date().toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' })
       };
-      
+
       setResult(auditResult);
-      
+
       // Sauvegarder dans le localStorage pour le dashboard
       localStorage.setItem("lastAudit", JSON.stringify(auditResult));
     } catch (err: any) {
@@ -257,13 +257,13 @@ export default function Home() {
                         <h3 className="text-white font-bold text-lg mb-2">Débloquer votre rapport</h3>
                         {user ? (
                           <p className="text-teal-400 text-sm font-medium">
-                            Connecté en tant que <span className="text-white">{user.primaryEmailAddress?.emailAddress}</span>. <br/>Le rapport vous sera envoyé directement.
+                            Connecté en tant que <span className="text-white">{user.primaryEmailAddress?.emailAddress}</span>. <br />Le rapport vous sera envoyé directement.
                           </p>
                         ) : (
                           <p className="text-white/60 text-sm">Entrez votre email pour recevoir les détails de votre audit et les solutions correctives.</p>
                         )}
                       </div>
-                      
+
                       {!user ? (
                         <form onSubmit={handleUnlock} className="space-y-3">
                           <input
@@ -279,7 +279,7 @@ export default function Home() {
                           </button>
                         </form>
                       ) : (
-                        <button 
+                        <button
                           onClick={() => handleUnlock()}
                           className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20"
                         >
@@ -317,13 +317,13 @@ export default function Home() {
                     Nos experts peuvent corriger tous ces points critiques en moins de 48h. Réservez une consultation gratuite pour faire le point.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link 
+                    <Link
                       href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
                       className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center"
                     >
                       PRENDRE RENDEZ-VOUS
                     </Link>
-                    <a 
+                    <a
                       href="#tarifs"
                       className="text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest cursor-pointer"
                     >
@@ -411,7 +411,7 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link 
+                  <Link
                     href={user ? "/dashboard" : "/sign-up"}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
@@ -439,7 +439,7 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link 
+                  <Link
                     href={user ? "/dashboard" : "/sign-up"}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
@@ -470,7 +470,7 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link 
+                  <Link
                     href={user ? "/dashboard" : "/sign-up"}
                     className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all text-center"
                   >
