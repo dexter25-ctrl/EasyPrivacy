@@ -32,8 +32,8 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://easy-privacy.vercel.app'}/dashboard?canceled=true`,
     });
 
-    // On retourne l'URL pour une redirection directe (méthode la plus robuste)
-    return NextResponse.json({ url: session.url, sessionId: session.id });
+    // Redirection directe vers Stripe (méthode bulletproof)
+    return NextResponse.json({ url: session.url });
   } catch (err: any) {
     console.error('STRIPE_CHECKOUT_ERROR:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

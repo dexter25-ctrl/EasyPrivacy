@@ -5,7 +5,6 @@ import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { loadStripe } from "@stripe/stripe-js";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -50,12 +49,11 @@ export default function Dashboard() {
       
       if (data.url) {
         window.location.href = data.url;
-      } else if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+      } else {
+        console.error("Erreur: Pas d'url reçue", data);
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
+      console.error("Erreur lors du checkout", error);
     } finally {
       setLoading(false);
     }

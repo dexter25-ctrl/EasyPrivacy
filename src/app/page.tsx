@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useUser, useClerk, useAuth } from "@clerk/nextjs";
-import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -152,12 +151,11 @@ export default function Home() {
       
       if (data.url) {
         window.location.href = data.url;
-      } else if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+      } else {
+        console.error("Erreur: Pas d'url reçue", data);
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
+      console.error("Erreur lors du checkout", error);
     } finally {
       setLoading(false);
     }
