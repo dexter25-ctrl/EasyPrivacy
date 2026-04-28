@@ -22,7 +22,7 @@ export default function Navbar() {
           <SignedOut>
             <SignInButton mode="modal">
               <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all">
-                Connexion
+                Se connecter
               </button>
             </SignInButton>
           </SignedOut>
