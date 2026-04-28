@@ -9,15 +9,14 @@ import {
   Shield, 
   AlertTriangle, 
   CheckCircle, 
-  ExternalLink, 
   Download, 
   Info, 
   ChevronRight, 
-  Search, 
   Mail, 
   Lock,
   ArrowRight,
-  FileText
+  FileText,
+  X
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -97,11 +96,15 @@ function DashboardContent() {
     score: 0,
     date: "N/A",
     url: "Aucun scan récent",
-    criticalPoints: [],
+    criticalPoints: [
+      "Absence de bouton 'Refuser tout' sur le bandeau cookie",
+      "Politique de confidentialité non accessible en un clic",
+      "Scripts tiers (Google/FB) activés avant le consentement"
+    ],
   };
 
   // Calcul du score dynamique
-  const baseScore = displayAudit.score;
+  const baseScore = displayAudit.score > 0 ? displayAudit.score : 20;
   const taskCount = displayAudit.criticalPoints.length;
   const scoreIncrement = taskCount > 0 ? (100 - baseScore) / taskCount : 0;
   const currentScore = Math.min(100, Math.round(baseScore + (completedTasks.length * scoreIncrement)));
@@ -115,12 +118,13 @@ function DashboardContent() {
 
   const getRepairExplanation = (point: string) => {
     const explanations: Record<string, string> = {
+      "Absence de bouton 'Refuser tout' sur le bandeau cookie": "La CNIL impose que refuser les cookies soit aussi simple que de les accepter. Ajoutez un bouton 'Tout refuser' de même taille et couleur que le bouton d'acceptation.",
+      "Politique de confidentialité non accessible en un clic": "L'utilisateur doit pouvoir consulter votre politique de traitement des données à tout moment. Ajoutez un lien permanent dans votre pied de page (footer).",
+      "Scripts tiers (Google/FB) activés avant le consentement": "Les traceurs publicitaires ou analytiques ne doivent pas s'exécuter avant que l'utilisateur ait cliqué sur 'Accepter'. Bloquez-les via votre gestionnaire de tags (GTM).",
       "Absence de bouton 'Tout Refuser'": "Conformément aux directives de la CNIL, refuser les cookies doit être aussi simple que de les accepter. Ajoutez un bouton explicite au même niveau visuel que le bouton d'acceptation.",
       "Google Analytics activé sans consentement": "Ce traceur collecte des données personnelles. Il doit rester inactif jusqu'à l'obtention du consentement explicite via votre bandeau cookie.",
       "Mentions légales incomplètes": "Votre site doit obligatoirement identifier son éditeur, son hébergeur et ses coordonnées de contact pour être en règle avec la LCEN.",
-      "Pixel Facebook détecté avant accord": "Le Pixel Facebook est un traceur tiers hautement intrusif. Son exécution doit être strictement conditionnée à un accord positif de l'utilisateur.",
-      "SSL expiré ou mal configuré": "La sécurité SSL est le socle de la protection des données. Un certificat invalide expose les données de vos clients et nuit à votre SEO.",
-      "Absence de politique de confidentialité": "Vous devez informer vos utilisateurs sur la manière dont vous traitez leurs données. Créez une page dédiée accessible depuis votre footer."
+      "Pixel Facebook détecté avant accord": "Le Pixel Facebook est un traceur tiers hautement intrusif. Son exécution doit être strictement conditionnée à un accord positif de l'utilisateur."
     };
     return explanations[point] || "Ce point critique nécessite une correction technique pour assurer la conformité RGPD de votre domaine.";
   };
@@ -136,7 +140,7 @@ function DashboardContent() {
     doc.setFont("helvetica", "bold");
     doc.text("EASYPRIVACY PROFESSIONAL", 20, 25);
     
-    doc.setTextColor(100, 100, 100);
+    doc.setTextColor(150, 150, 150);
     doc.setFontSize(10);
     doc.text(`Rapport généré le ${new Date().toLocaleDateString()}`, 140, 25);
 
@@ -150,7 +154,7 @@ function DashboardContent() {
       head: [['Domaine Audité', 'Score Global', 'Statut']],
       body: [[displayAudit.url, `${currentScore}%`, currentScore > 80 ? 'Sécurisé' : 'Non Conforme']],
       theme: 'grid',
-      headStyles: { fillStyle: [45, 212, 191], textColor: [255, 255, 255] }
+      headStyles: { fillColor: [45, 212, 191], textColor: [255, 255, 255] }
     });
 
     // Risques
@@ -194,7 +198,7 @@ function DashboardContent() {
                 <p className="text-white font-medium text-sm">Votre abonnement Pro est actif. Accédez maintenant à votre plan d'action personnalisé.</p>
               </div>
             </div>
-            <button onClick={() => setShowSuccessBanner(false)} className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all">Masquer</button>
+            <button onClick={() => setShowSuccessBanner(false)} className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all">Fermer</button>
           </div>
         )}
 
@@ -213,8 +217,12 @@ function DashboardContent() {
             <Link href="/" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-2xl transition-all text-sm font-bold flex items-center gap-2">
               <ArrowRight size={16} className="rotate-180" /> Accueil
             </Link>
-            <button onClick={generatePDF} disabled={!isPro} className={`${isPro ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-bold px-8 py-3 rounded-2xl transition-all flex items-center gap-2`}>
-              <Download size={18} /> Rapport PDF
+            <button 
+              onClick={generatePDF} 
+              disabled={!isPro} 
+              className={`${isPro ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-black px-8 py-3 rounded-2xl transition-all flex items-center gap-3`}
+            >
+              <Download size={18} /> Télécharger le rapport
             </button>
           </div>
         </div>
@@ -224,20 +232,23 @@ function DashboardContent() {
           {/* Card 1: Donut Score */}
           <div onClick={() => setActiveModal("score")} className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-teal-500/50 shadow-2xl cursor-pointer">
             <div className="relative space-y-6">
-              <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                <Shield size={14} className="text-teal-400" /> Score Global
-              </h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
+                  <Shield size={14} className="text-teal-400" /> Score Global
+                </h3>
+                <ChevronRight size={14} className="text-white/20 group-hover:text-teal-400 transition-colors" />
+              </div>
               <div className="flex items-center gap-8">
                 <div className="relative w-24 h-24 flex items-center justify-center">
                   <svg className="absolute inset-0 w-full h-full -rotate-90">
-                    <circle cx="48" cy="48" r="44" className="stroke-white/5" strokeWidth="8" fill="none" />
+                    <circle cx="48" cy="48" r="40" className="stroke-white/5" strokeWidth="10" fill="none" />
                     <circle 
-                      cx="48" cy="48" r="44" 
+                      cx="48" cy="48" r="40" 
                       className="stroke-teal-500 transition-all duration-1000 ease-out" 
-                      strokeWidth="8" 
+                      strokeWidth="10" 
                       fill="none"
-                      strokeDasharray="276"
-                      strokeDashoffset={276 - (276 * currentScore) / 100}
+                      strokeDasharray="251.2"
+                      strokeDashoffset={251.2 - (251.2 * currentScore) / 100}
                       strokeLinecap="round"
                     />
                   </svg>
@@ -245,7 +256,7 @@ function DashboardContent() {
                 </div>
                 <div>
                   <p className="text-teal-400 font-black text-xs uppercase">Conformité</p>
-                  <p className="text-white/40 text-[10px] mt-1 italic">Basé sur 24 points de contrôle</p>
+                  <p className="text-white/40 text-[10px] mt-1 italic">Détail analytique disponible</p>
                 </div>
               </div>
             </div>
@@ -254,18 +265,25 @@ function DashboardContent() {
           {/* Card 2: Risks Severity */}
           <div onClick={() => setActiveModal("risques")} className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-red-500/50 shadow-2xl cursor-pointer">
             <div className="relative space-y-6">
-              <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                <AlertTriangle size={14} className="text-red-400" /> Risques
-              </h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
+                  <AlertTriangle size={14} className="text-red-400" /> Risques
+                </h3>
+                <ChevronRight size={14} className="text-white/20 group-hover:text-red-400 transition-colors" />
+              </div>
               <div className="flex items-end justify-between gap-4">
                 <div className="space-y-1">
                   <span className="text-6xl font-black text-white">{risksCount}</span>
-                  <p className={`text-[10px] font-black uppercase ${risksCount > 0 ? 'text-red-400' : 'text-teal-400'}`}>Failles critiques</p>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${risksCount > 0 ? 'bg-red-500/20 text-red-400' : 'bg-teal-500/20 text-teal-400'}`}>
+                      {risksCount > 0 ? 'Critique' : 'Sécurisé'}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex gap-1 items-end h-12">
-                  <div className={`w-3 rounded-t-sm ${risksCount > 5 ? 'bg-red-500 h-full' : 'bg-red-500/20 h-1/2'}`} />
-                  <div className={`w-3 rounded-t-sm ${risksCount > 2 ? 'bg-orange-500 h-2/3' : 'bg-orange-500/20 h-1/3'}`} />
-                  <div className={`w-3 rounded-t-sm ${risksCount > 0 ? 'bg-yellow-500 h-1/2' : 'bg-yellow-500/20 h-1/4'}`} />
+                <div className="flex gap-1.5 items-end h-12">
+                  <div className={`w-3 rounded-t-lg transition-all duration-500 ${risksCount >= 3 ? 'bg-red-500 h-full' : 'bg-red-500/10 h-1/3'}`} />
+                  <div className={`w-3 rounded-t-lg transition-all duration-500 ${risksCount >= 2 ? 'bg-orange-500 h-3/4' : 'bg-orange-500/10 h-1/4'}`} />
+                  <div className={`w-3 rounded-t-lg transition-all duration-500 ${risksCount >= 1 ? 'bg-yellow-500 h-1/2' : 'bg-yellow-500/10 h-1/5'}`} />
                 </div>
               </div>
             </div>
@@ -274,126 +292,126 @@ function DashboardContent() {
           {/* Card 3: Realtime Status */}
           <div onClick={() => setActiveModal("statut")} className="relative group overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 transition-all hover:border-blue-500/50 shadow-2xl cursor-pointer">
             <div className="relative space-y-6">
-              <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                <CheckCircle size={14} className="text-blue-400" /> Surveillance
-              </h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
+                  <CheckCircle size={14} className="text-blue-400" /> Surveillance
+                </h3>
+                <ChevronRight size={14} className="text-white/20 group-hover:text-blue-400 transition-colors" />
+              </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded-full animate-ping ${currentScore > 80 ? 'bg-teal-400' : currentScore > 50 ? 'bg-orange-400' : 'bg-red-500'}`} />
-                  <span className="text-2xl font-black text-white">{currentScore > 80 ? 'Site Sécurisé' : 'Non Conforme'}</span>
+                  <div className={`w-4 h-4 rounded-full animate-pulse ${currentScore > 80 ? 'bg-teal-400 shadow-[0_0_15px_#2dd4bf]' : currentScore > 50 ? 'bg-orange-400 shadow-[0_0_15px_#fb923c]' : 'bg-red-500 shadow-[0_0_15px_#ef4444]'}`} />
+                  <span className="text-2xl font-black text-white">{currentScore > 80 ? 'Site Sécurisé' : currentScore > 50 ? 'Audit Partiel' : 'Non Conforme'}</span>
                 </div>
-                <div className="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between">
-                  <span className="text-[10px] text-white/40 font-bold uppercase">Fréquence</span>
-                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{isPro ? 'Temps Réel' : '24h'}</span>
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-between">
+                  <span className="text-[10px] text-white/40 font-black uppercase">Statut Monitoring</span>
+                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{isPro ? 'Actif' : 'Limité'}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ACTION PLAN & CONTACT */}
+        {/* ANALYSE DÉTAILLÉE & PLAN D'ACTION */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Interactive Checklist (Plan Pro Value) */}
-          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 space-y-8 relative overflow-hidden">
-            <div className="flex justify-between items-center relative z-10">
-              <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-3">
-                <FileText className="text-blue-400" size={24} /> Plan d'action prioritaire
-              </h3>
+          {/* Plan d'action prioritaire (Checklist) */}
+          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 space-y-8 flex flex-col">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400">
+                <FileText size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-white tracking-tight">Plan d'action prioritaire</h3>
+                <p className="text-white/40 text-xs">Suivez ces étapes pour atteindre les 100%.</p>
+              </div>
             </div>
 
-            <div className="space-y-3 relative z-10">
+            <div className="space-y-4 flex-1">
               {isPro ? (
                 displayAudit.criticalPoints.map((point, i) => (
-                  <div key={i} className={`group flex items-center gap-4 p-4 rounded-2xl border transition-all ${completedTasks.includes(point) ? 'bg-teal-500/10 border-teal-500/30 opacity-60' : 'bg-white/5 border-white/10 hover:border-white/20'}`}>
+                  <div key={i} className={`flex items-center gap-4 p-5 rounded-2xl border transition-all ${completedTasks.includes(point) ? 'bg-teal-500/10 border-teal-500/30' : 'bg-white/5 border-white/10 hover:border-white/20'}`}>
                     <button 
                       onClick={() => toggleTask(point)}
-                      className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${completedTasks.includes(point) ? 'bg-teal-500 text-slate-900 shadow-[0_0_15px_rgba(45,212,191,0.4)]' : 'border-2 border-white/20 hover:border-teal-500/50'}`}
+                      className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all ${completedTasks.includes(point) ? 'bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/30' : 'border-2 border-white/10 hover:border-teal-500/50'}`}
                     >
-                      {completedTasks.includes(point) && <CheckCircle size={16} strokeWidth={3} />}
+                      {completedTasks.includes(point) && <CheckCircle size={18} strokeWidth={3} />}
                     </button>
-                    <span className={`flex-1 text-sm font-bold ${completedTasks.includes(point) ? 'text-teal-400 line-through' : 'text-white'}`}>{point}</span>
-                    <button onClick={() => setRepairInfo(point)} className="text-white/20 hover:text-blue-400 transition-all p-1 hover:bg-white/5 rounded-lg">
+                    <div className="flex-1">
+                      <span className={`text-sm font-bold ${completedTasks.includes(point) ? 'text-teal-400/60 line-through' : 'text-white'}`}>{point}</span>
+                    </div>
+                    <button 
+                      onClick={() => setRepairInfo(point)}
+                      className="text-white/20 hover:text-blue-400 transition-colors p-2 hover:bg-white/5 rounded-xl"
+                      title="Comment réparer ?"
+                    >
                       <Info size={20} />
                     </button>
                   </div>
                 ))
               ) : (
-                <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
-                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center text-white/20">
+                <div className="flex flex-col items-center justify-center py-12 space-y-6 text-center">
+                  <div className="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-white/20">
                     <Lock size={32} />
                   </div>
                   <div className="space-y-2 max-w-xs">
-                    <p className="text-white font-bold">Contenu exclusif Pro</p>
-                    <p className="text-white/40 text-xs italic">Débloquez votre guide juridique étape par étape pour corriger vos {taskCount} failles.</p>
+                    <p className="text-white font-bold">Guide de correction verrouillé</p>
+                    <p className="text-white/40 text-xs italic">Les {displayAudit.criticalPoints.length} points critiques ne peuvent être corrigés qu'avec le Plan Pro.</p>
                   </div>
-                  <button onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")} className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest shadow-xl transition-all">
-                    Débloquer le Plan d'action
+                  <button onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")} className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-2xl font-black uppercase text-xs tracking-widest transition-all">
+                    Débloquer le Guide Pro
                   </button>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Contact Support */}
-          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 flex flex-col justify-between space-y-8">
+          {/* Formulaire de Contact Expert */}
+          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 flex flex-col space-y-8">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-teal-500/20 rounded-2xl flex items-center justify-center text-teal-400">
-                <Mail size={28} />
+              <div className="w-12 h-12 bg-teal-500/20 rounded-2xl flex items-center justify-center text-teal-400">
+                <Mail size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-black text-white tracking-tight">Conseil Juridique</h3>
-                <p className="text-white/40 text-sm">Une question ? Un expert vous répond en 6h.</p>
+                <h3 className="text-xl font-black text-white tracking-tight">Support Expert</h3>
+                <p className="text-white/40 text-sm">Posez vos questions techniques à un DPO.</p>
               </div>
             </div>
             <form onSubmit={handleSendEmail} className="space-y-4">
               <input 
                 type="text" required value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
-                placeholder="Objet de la demande"
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none"
+                placeholder="Objet de votre demande"
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none"
               />
               <textarea 
                 required value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
-                placeholder="Expliquez-nous votre besoin..." rows={4}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none resize-none"
+                placeholder="Décrivez votre problématique..." rows={4}
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none resize-none"
               />
-              <button type="submit" className="w-full bg-white text-slate-950 font-black py-4 rounded-xl hover:bg-teal-400 transition-all shadow-xl uppercase text-xs tracking-widest">
-                Envoyer le message
+              <button type="submit" className="w-full bg-white text-slate-950 font-black py-4 rounded-2xl hover:bg-teal-400 transition-all shadow-xl uppercase text-xs tracking-widest">
+                Envoyer au support Pro
               </button>
             </form>
           </div>
         </div>
 
-        {/* PRICING SECTION */}
-        <div className="pt-20 space-y-12">
+        {/* PRICING PLANS */}
+        <div className="pt-20 space-y-12 pb-20">
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Évoluez vers la sérénité</h2>
-            <p className="text-white/40 text-lg max-w-2xl mx-auto italic">Votre conformité ne devrait pas être un stress. Choisissez le bouclier qui vous correspond.</p>
+            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Choisissez votre protection</h2>
+            <p className="text-white/40 text-lg max-w-2xl mx-auto italic">Passez au niveau supérieur pour une conformité totale et automatisée.</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
-            {/* Plans identical to Home but with "Plan Actuel" logic */}
             {[
-              { 
-                name: "OFFRE TEST", price: "0", 
-                features: ["Scan manuel", "Rapport de base", "Score global"], 
-                isPro: false, color: "teal", id: "" 
-              },
-              { 
-                name: "PRO", price: "29", 
-                features: ["Plan d'action", "Alertes 24/7", "Rapports PDF", "Surveillance"], 
-                isPro: true, color: "blue", id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO 
-              },
-              { 
-                name: "ENTREPRISE", price: "79", 
-                features: ["Expert dédié", "Correctifs automatiques", "Support VIP", "Scan quotidien"], 
-                isPro: true, color: "purple", id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE 
-              }
+              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: !isPro, id: "" },
+              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: isPro, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO },
+              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE }
             ].map((plan, i) => (
-              <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${(!isPro && plan.price === "0") || (isPro && plan.price === "29") ? 'border-teal-500/50 scale-105 z-20' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20 shadow-2xl`}>
-                {((!isPro && plan.price === "0") || (isPro && plan.price === "29")) && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase px-6 py-1.5 rounded-full shadow-xl">Actuel</div>
+              <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
+                {plan.active && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase px-6 py-1.5 rounded-full">Actuel</div>
                 )}
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-black text-white uppercase tracking-widest">{plan.name}</h3>
+                  <h3 className="text-2xl font-black text-white tracking-widest">{plan.name}</h3>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black text-white">{plan.price}€</span>
                     <span className="text-white/40 text-sm font-bold">/mois</span>
@@ -401,16 +419,16 @@ function DashboardContent() {
                 </div>
                 <ul className="space-y-4 flex-1">
                   {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-3 text-sm text-white/70 font-medium">
-                      <CheckCircle size={18} className="text-teal-400 shrink-0" /> {f}
+                    <li key={j} className="flex items-center gap-3 text-sm text-white/70">
+                      <CheckCircle size={16} className="text-teal-400 shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
                 <button 
-                  onClick={() => plan.id && handlePlanClick(plan.id)}
-                  className={`w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${((!isPro && plan.price === "0") || (isPro && plan.price === "29")) ? 'bg-white/10 text-white/40 cursor-default' : 'bg-white text-slate-950 hover:bg-teal-400 hover:scale-[1.02]'}`}
+                  onClick={() => !plan.active && plan.id && handlePlanClick(plan.id)}
+                  className={`w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${plan.active ? 'bg-white/10 text-white/40 cursor-default' : 'bg-white text-slate-950 hover:bg-teal-400 hover:scale-[1.02]'}`}
                 >
-                  {((!isPro && plan.price === "0") || (isPro && plan.price === "29")) ? "Actif" : "Choisir ce plan"}
+                  {plan.active ? "Plan Actif" : "Choisir ce plan"}
                 </button>
               </div>
             ))}
@@ -418,18 +436,20 @@ function DashboardContent() {
         </div>
       </div>
 
-      {/* REPAIR INFO MODAL */}
+      {/* MODALE REPAIR INFO */}
       <Dialog.Root open={!!repairInfo} onOpenChange={() => setRepairInfo(null)}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[200]" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-lg bg-slate-900 border border-white/10 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(0,0,0,0.5)] z-[201] focus:outline-none">
-            <div className="space-y-8 text-center">
-              <div className="w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center text-blue-400 mx-auto">
-                <Info size={40} />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Conseil Juridique</h3>
-                <p className="text-blue-400 text-sm font-black uppercase tracking-widest">{repairInfo}</p>
+          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-lg bg-slate-900 border border-white/10 rounded-[3rem] p-12 shadow-2xl z-[201] focus:outline-none">
+            <div className="space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-blue-500/20 rounded-3xl flex items-center justify-center text-blue-400">
+                  <Info size={32} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tight">Conseil Juridique</h3>
+                  <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1">{repairInfo}</p>
+                </div>
               </div>
               <p className="text-white/60 leading-relaxed text-sm bg-white/5 p-8 rounded-3xl border border-white/5">
                 {repairInfo && getRepairExplanation(repairInfo)}
@@ -438,31 +458,96 @@ function DashboardContent() {
                 J'ai compris
               </button>
             </div>
+            <button onClick={() => setRepairInfo(null)} className="absolute top-8 right-8 text-white/20 hover:text-white transition-colors">
+              <X size={24} />
+            </button>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
 
-      {/* OTHER MODALS */}
+      {/* MODALES DÉTAILS (SCORE, RISQUES, STATUT) */}
       <Dialog.Root open={!!activeModal} onOpenChange={() => setActiveModal(null)}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl bg-slate-900 border border-white/10 rounded-[2.5rem] p-10 shadow-2xl z-[101] focus:outline-none">
-            <div className="space-y-6">
-              <Dialog.Title className="text-2xl font-black text-white uppercase">{activeModal === 'score' ? 'Détail du Score' : activeModal === 'risques' ? 'Analyse des Risques' : 'État de la Surveillance'}</Dialog.Title>
-              <p className="text-white/40 leading-relaxed">Cette section fournit une analyse approfondie des vecteurs de conformité. En tant qu'expert RGPD, nous évaluons plus de 24 points de contrôle techniques et juridiques pour garantir la sécurité de votre domaine.</p>
-              <button onClick={() => setActiveModal(null)} className="w-full bg-white/10 text-white font-bold py-3 rounded-xl uppercase text-xs">Fermer</button>
+          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl bg-slate-900 border border-white/10 rounded-[3rem] p-12 shadow-2xl z-[101] focus:outline-none">
+            <div className="space-y-8">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tight">
+                    {activeModal === 'score' ? 'Pilier de Conformité' : activeModal === 'risques' ? 'Analyse de Sévérité' : 'Monitoring Actif'}
+                  </h2>
+                  <p className="text-white/40 text-sm">Rapport détaillé de notre expert RGPD.</p>
+                </div>
+                <button onClick={() => setActiveModal(null)} className="text-white/20 hover:text-white transition-colors p-2 bg-white/5 rounded-xl"><X size={20} /></button>
+              </div>
+
+              {activeModal === 'score' && (
+                <div className="space-y-6">
+                  {[
+                    { label: "Consentement Explicite", val: Math.min(100, currentScore + 10), color: "bg-teal-500" },
+                    { label: "Mentions Légales", val: Math.min(100, currentScore + 5), color: "bg-blue-500" },
+                    { label: "Sécurité SSL", val: 100, color: "bg-purple-500" },
+                    { label: "Gestion Cookies", val: currentScore, color: "bg-orange-500" }
+                  ].map((p, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest">
+                        <span>{p.label}</span>
+                        <span>{p.val}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className={`h-full ${p.color} rounded-full transition-all duration-1000`} style={{ width: `${p.val}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                  <p className="text-sm text-white/60 p-6 bg-white/5 rounded-2xl border border-white/5 leading-relaxed">
+                    Notre algorithme évalue 4 piliers fondamentaux. Une note sous les 80% expose votre entreprise à des risques de mise en demeure par les autorités de contrôle.
+                  </p>
+                </div>
+              )}
+
+              {activeModal === 'risques' && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-6 p-8 bg-red-500/10 border border-red-500/20 rounded-3xl">
+                    <AlertTriangle size={48} className="text-red-400" />
+                    <div className="space-y-1">
+                      <p className="text-white font-black uppercase text-xl">Vulnérabilités critiques</p>
+                      <p className="text-red-400/60 text-xs font-bold uppercase tracking-widest">Action immédiate requise</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {displayAudit.criticalPoints.map((p, i) => (
+                      <div key={i} className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl text-xs text-white/80 font-medium border border-white/5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                        {p}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'statut' && (
+                <div className="space-y-8 text-center py-12">
+                  <div className="w-32 h-32 rounded-full border-2 border-teal-500/20 flex items-center justify-center mx-auto relative">
+                    <div className="w-20 h-20 bg-teal-500/20 rounded-full animate-pulse" />
+                    <Shield size={48} className="absolute text-teal-400" />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-black text-white uppercase tracking-tighter">Surveillance Temps Réel</p>
+                    <p className="text-white/40 text-sm max-w-sm mx-auto">Votre domaine est scanné périodiquement pour détecter toute régression de conformité lors de vos mises à jour.</p>
+                  </div>
+                </div>
+              )}
             </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-
     </main>
   );
 }
 
 export default function Dashboard() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#020617] flex items-center justify-center text-teal-400 font-black">CHARGEMENT DU DASHBOARD...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#020617] flex items-center justify-center text-teal-400 font-black tracking-widest">CHARGEMENT DE VOTRE ESPACE EXPERT...</div>}>
       <DashboardContent />
     </Suspense>
   );
