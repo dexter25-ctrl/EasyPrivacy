@@ -96,13 +96,6 @@ export default function Home() {
     }
   };
 
-  const handlePricingClick = () => {
-    if (!user) {
-      router.push("/sign-up");
-    } else {
-      router.push("/dashboard");
-    }
-  };
 
   const handleUnlock = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -324,12 +317,12 @@ export default function Home() {
                     Nos experts peuvent corriger tous ces points critiques en moins de 48h. Réservez une consultation gratuite pour faire le point.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a 
-                      href="mailto:dextoolstudio@gmail.com?subject=Demande d'appel stratégique - EasyPrivacy"
+                    <Link 
+                      href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
                       className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center"
                     >
-                      RÉSERVER MON APPEL STRATÉGIQUE
-                    </a>
+                      PRENDRE RENDEZ-VOUS
+                    </Link>
                     <a 
                       href="#tarifs"
                       className="text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest cursor-pointer"
@@ -418,12 +411,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={handlePricingClick}
-                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all"
+                  <Link 
+                    href={user ? "/dashboard" : "/sign-up"}
+                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Essayer gratuitement
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Plan 2: Pro */}
@@ -446,12 +439,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={handlePricingClick}
-                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all"
+                  <Link 
+                    href={user ? "/dashboard" : "/sign-up"}
+                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Choisir ce plan
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Plan 3: Entreprise */}
@@ -477,12 +470,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={handlePricingClick}
-                    className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all"
+                  <Link 
+                    href={user ? "/dashboard" : "/sign-up"}
+                    className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all text-center"
                   >
                     Passer à l'Entreprise
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -13,12 +13,22 @@ export default function Dashboard() {
     criticalPoints: string[];
   } | null>(null);
 
+  // States pour le formulaire de contact
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+
   useEffect(() => {
     const savedAudit = localStorage.getItem("lastAudit");
     if (savedAudit) {
       setLastAudit(JSON.parse(savedAudit));
     }
   }, []);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const mailtoUrl = `mailto:dextoolstudio@gmail.com?subject=${encodeURIComponent(contactSubject)}&body=${encodeURIComponent(contactMessage)}`;
+    window.location.href = mailtoUrl;
+  };
 
   // Données par défaut si aucun audit n'a été fait
   const displayAudit = lastAudit || {
@@ -128,25 +138,90 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Footer Dashboard */}
-        <div className="bg-gradient-to-r from-teal-900/20 to-blue-900/20 border border-teal-500/10 rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center">
-              <svg className="w-6 h-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+        {/* Section Plans Upgrade */}
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-8">
+          <h2 className="text-xl font-bold text-white uppercase tracking-widest text-center">Améliorez votre couverture</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Pro Upgrade */}
+            <div className="p-6 bg-black/40 rounded-2xl border border-white/5 hover:border-teal-500/30 transition-all space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-white text-lg">Plan Pro</h3>
+                <span className="text-teal-400 font-black">29€/m</span>
+              </div>
+              <p className="text-white/40 text-sm italic">Surveillance hebdomadaire et rapports auto.</p>
+              <button className="w-full py-3 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 font-bold rounded-xl border border-teal-500/20 transition-all">
+                S'abonner au Plan Pro
+              </button>
             </div>
-            <div>
-              <p className="text-white font-bold">Besoin d'aide pour corriger ces points ?</p>
-              <p className="text-white/40 text-sm">Nos experts sont disponibles pour une mise en conformité éclair.</p>
+            {/* Enterprise Upgrade */}
+            <div className="p-6 bg-teal-500/5 rounded-2xl border border-teal-500/20 hover:border-teal-400 transition-all space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-white text-lg">Plan Entreprise</h3>
+                <span className="text-teal-400 font-black">79€/m</span>
+              </div>
+              <p className="text-white/40 text-sm italic">Support 24/7 et mise en conformité expert.</p>
+              <button className="w-full py-3 bg-teal-500 text-slate-900 font-bold rounded-xl hover:bg-teal-400 transition-all">
+                Passer à l'Entreprise
+              </button>
             </div>
           </div>
-          <a 
-            href="mailto:dextoolstudio@gmail.com?subject=Demande de rendez-vous - EasyPrivacy"
-            className="whitespace-nowrap bg-white text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl"
-          >
-            PRENDRE RENDEZ-VOUS
-          </a>
+        </div>
+
+        {/* Contact Section */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Contact Form */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6">
+            <h2 className="text-xl font-bold text-white">Nous contacter</h2>
+            <form onSubmit={handleContactSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest ml-1">Objet</label>
+                <input 
+                  type="text" 
+                  required
+                  value={contactSubject}
+                  onChange={(e) => setContactSubject(e.target.value)}
+                  placeholder="Ex: Question sur mon audit"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:ring-2 focus:ring-teal-500/50 outline-none"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest ml-1">Message</label>
+                <textarea 
+                  required
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  placeholder="Votre message ici..."
+                  rows={4}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:ring-2 focus:ring-teal-500/50 outline-none resize-none"
+                />
+              </div>
+              <button 
+                type="submit"
+                className="w-full bg-white text-slate-900 font-black py-3 rounded-xl hover:scale-[1.02] transition-all shadow-xl"
+              >
+                ENVOYER LE MESSAGE
+              </button>
+            </form>
+          </div>
+
+          {/* Quick Help CTA */}
+          <div className="bg-gradient-to-br from-teal-900/40 to-blue-900/20 border border-teal-500/10 rounded-3xl p-8 flex flex-col justify-center space-y-6 text-center">
+            <div className="w-16 h-16 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">Support Prioritaire</h3>
+              <p className="text-white/40 text-sm">Une question urgente ? <br/>Nos experts vous répondent en moins de 2h.</p>
+            </div>
+            <a 
+              href="mailto:dextoolstudio@gmail.com?subject=Demande de rendez-vous - EasyPrivacy"
+              className="bg-teal-500 text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl"
+            >
+              PRENDRE RENDEZ-VOUS
+            </a>
+          </div>
         </div>
       </div>
     </main>
