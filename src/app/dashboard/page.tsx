@@ -37,7 +37,7 @@ export default function Dashboard() {
     window.location.href = mailtoUrl;
   };
 
-  const handleCheckout = async (priceId: string) => {
+  const handlePlanClick = async (priceId: string) => {
     try {
       setLoading(true);
       const response = await fetch("/api/checkout", {
@@ -354,7 +354,7 @@ export default function Dashboard() {
                 ))}
               </ul>
               <button 
-                onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
+                onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
                 disabled={loading}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20 disabled:opacity-50"
               >
@@ -386,7 +386,7 @@ export default function Dashboard() {
                 ))}
               </ul>
               <button 
-                onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || "")}
+                onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || "")}
                 disabled={loading}
                 className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center uppercase text-xs tracking-widest disabled:opacity-50"
               >
