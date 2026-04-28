@@ -356,27 +356,34 @@ export default function Dashboard() {
               <button 
                 onClick={async (e) => {
                   e.preventDefault();
-                  alert('Étape 1 : Clic détecté');
+                  const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO;
+                  
+                  if (!priceId || priceId === 'votre_price_id_pro_ici') {
+                    alert('ERREUR : Vous devez configurer NEXT_PUBLIC_STRIPE_PRICE_ID_PRO dans vos variables d\'environnement Vercel.');
+                    return;
+                  }
+
+                  alert('Étape 1 : Connexion à Stripe avec l\'ID ' + priceId);
                   try {
                     const res = await fetch('/api/checkout', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || 'TON_ID_PRO' }),
+                      body: JSON.stringify({ priceId: priceId }),
                     });
                     const data = await res.json();
                     alert('Étape 2 : Réponse reçue de l\'API');
                     if (data.url) {
                       window.location.href = data.url;
                     } else {
-                      alert('Erreur : ' + (data.error || 'Pas d\'URL'));
+                      alert('Erreur API : ' + (data.error || 'Pas d\'URL reçue'));
                     }
                   } catch (err) {
-                    alert('Erreur fatale : ' + err);
+                    alert('Erreur fatale (Réseau) : ' + err);
                   }
                 }}
                 className="w-full py-4 rounded-2xl bg-red-600 text-white font-black hover:bg-red-700 transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-red-500/20"
               >
-                COMMANDER LE PLAN PRO (TEST ALERTS)
+                TESTER LE PAIEMENT PRO (VÉRIFICATION ID)
               </button>
             </div>
 
