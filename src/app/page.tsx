@@ -291,10 +291,59 @@ export default function Home() {
               </div>
             )}
 
-            {/* Pricing Section */}
-            <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+            {/* Section Comment ça marche */}
+            <div className="pt-16 pb-8 space-y-12">
               <div className="text-center space-y-3">
-                <h2 className="text-3xl sm:text-4xl font-black text-white">Passez aux normes dès aujourd'hui</h2>
+                <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Comment ça marche ?</h2>
+                <p className="text-white/60 text-lg">Une conformité simplifiée en 3 étapes clés.</p>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-8">
+                {/* Étape 1 */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
+                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Audit instantané</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    Notre algorithme analyse le code source de votre page d'accueil en temps réel pour détecter les scripts.
+                  </p>
+                </div>
+
+                {/* Étape 2 */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
+                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Diagnostic RGPD</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    Nous vérifions la présence obligatoire du bandeau cookie et de la politique de confidentialité conforme.
+                  </p>
+                </div>
+
+                {/* Étape 3 */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
+                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Rapport de conformité</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    Recevez un score détaillé et les actions correctives précises pour éviter les sanctions de la CNIL.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing Section */}
+            <div id="tarifs" className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+              <div className="text-center space-y-3">
+                <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Passez aux normes dès aujourd'hui</h2>
                 <p className="text-white/60 text-lg">Choisissez la protection adaptée à votre entreprise.</p>
               </div>
 
@@ -449,8 +498,58 @@ export default function Home() {
       </Dialog.Root>
 
       {/* Footer */}
-      <footer className="mt-auto pt-12 pb-6 text-white/20 text-xs font-medium uppercase tracking-[0.2em] z-10">
-        © 2026 EasyPrivacy Compliance SaaS - Sécurisé par chiffrement AES-256
+      <footer className="w-full border-t border-white/10 bg-black/20 backdrop-blur-md mt-24 py-16 px-6 sm:px-24">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-24">
+          {/* Brand */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.8L18.5 8 12 11.2 5.5 8 12 4.8z" />
+                </svg>
+              </div>
+              <span className="text-xl font-black text-white tracking-tighter">EasyPrivacy</span>
+            </div>
+            <p className="text-white/40 text-sm leading-relaxed">
+              La solution automatisée pour la conformité RGPD de votre entreprise. Sécurisez votre avenir numérique.
+            </p>
+          </div>
+
+          {/* Produit */}
+          <div className="space-y-6">
+            <h4 className="text-white font-bold uppercase tracking-widest text-xs">Produit</h4>
+            <ul className="space-y-4">
+              <li>
+                <a href="#" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Audit en direct</a>
+              </li>
+              <li>
+                <a href="#tarifs" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Tarifs</a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Légal */}
+          <div className="space-y-6">
+            <h4 className="text-white font-bold uppercase tracking-widest text-xs">Légal</h4>
+            <ul className="space-y-4">
+              <li>
+                <a href="/mentions-legales" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Mentions Légales</a>
+              </li>
+              <li>
+                <a href="/politique-confidentialite" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Politique de Confidentialité</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-white/20 text-[10px] font-medium uppercase tracking-[0.2em]">
+            © 2026 EasyPrivacy Compliance SaaS - Sécurisé par chiffrement AES-256
+          </p>
+          <div className="flex gap-6">
+            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" title="Système opérationnel"></div>
+          </div>
+        </div>
       </footer>
     </main>
   );
