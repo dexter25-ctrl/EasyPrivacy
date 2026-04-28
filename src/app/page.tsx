@@ -1,5 +1,7 @@
 "use client";
 
+// Déploiement Clerk v1.0 - Intégration de l'authentification sécurisée
+
 import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
