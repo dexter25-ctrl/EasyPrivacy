@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const { user } = useUser();
+  const router = useRouter();
   const [lastAudit, setLastAudit] = useState<{
     score: number;
     date: string;
@@ -17,6 +19,7 @@ export default function Dashboard() {
   // States pour le formulaire de contact
   const [contactSubject, setContactSubject] = useState("");
   const [contactMessage, setContactMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // States pour les modales
   const [activeModal, setActiveModal] = useState<"score" | "risques" | "statut" | null>(null);
@@ -32,6 +35,25 @@ export default function Dashboard() {
     e.preventDefault();
     const mailtoUrl = `mailto:dextoolstudio@gmail.com?subject=${encodeURIComponent(contactSubject)}&body=${encodeURIComponent(contactMessage)}`;
     window.location.href = mailtoUrl;
+  };
+
+  const handleCheckout = async (priceId: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const displayAudit = lastAudit || {
@@ -328,12 +350,13 @@ export default function Dashboard() {
                   </li>
                 ))}
               </ul>
-              <Link 
-                href="/dashboard"
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20"
+              <button 
+                onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20 disabled:opacity-50"
               >
-                Passer au Plan Pro
-              </Link>
+                {loading ? "Chargement..." : "Passer au Plan Pro"}
+              </button>
             </div>
 
             {/* Plan 3: Entreprise */}
@@ -359,12 +382,13 @@ export default function Dashboard() {
                   </li>
                 ))}
               </ul>
-              <Link 
-                href="/dashboard"
-                className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center uppercase text-xs tracking-widest"
+              <button 
+                onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || "")}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center uppercase text-xs tracking-widest disabled:opacity-50"
               >
-                Choisir ce plan
-              </Link>
+                {loading ? "Chargement..." : "Choisir ce plan"}
+              </button>
             </div>
           </div>
         </div>

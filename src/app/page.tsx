@@ -134,6 +134,30 @@ export default function Home() {
     }
   };
 
+  const handleCheckout = async (priceId: string) => {
+    if (!isSignedIn) {
+      router.push("/sign-up");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const closeItems = () => {
     setIsModalOpen(false);
     setModalSuccess(false);
@@ -441,12 +465,13 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link 
-                    href="/dashboard"
-                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
+                  <button 
+                    onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
+                    disabled={loading}
+                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center disabled:opacity-50"
                   >
-                    DÉMARRER CE PLAN
-                  </Link>
+                    {loading ? "Chargement..." : "DÉMARRER CE PLAN"}
+                  </button>
                 </div>
 
                 {/* Plan 3: Entreprise */}
@@ -472,12 +497,13 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link 
-                    href="/dashboard"
-                    className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center"
+                  <button 
+                    onClick={() => handleCheckout(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || "")}
+                    disabled={loading}
+                    className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center disabled:opacity-50"
                   >
-                    DÉMARRER AVEC L'ENTREPRISE
-                  </Link>
+                    {loading ? "Chargement..." : "DÉMARRER AVEC L'ENTREPRISE"}
+                  </button>
                 </div>
               </div>
             </div>
