@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://easy-privacy.vercel.app'}/dashboard?canceled=true`,
     });
 
-    // On retourne l'URL pour une redirection directe (plus simple pour le frontend actuel)
+    // On retourne l'URL pour une redirection directe (méthode la plus robuste)
     return NextResponse.json({ url: session.url, sessionId: session.id });
   } catch (err: any) {
     console.error('STRIPE_CHECKOUT_ERROR:', err);

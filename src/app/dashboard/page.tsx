@@ -48,11 +48,11 @@ export default function Dashboard() {
       });
       const data = await response.json();
       
-      if (data.sessionId) {
+      if (data.url) {
+        window.location.href = data.url;
+      } else if (data.sessionId) {
         const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
         await stripe?.redirectToCheckout({ sessionId: data.sessionId });
-      } else if (data.url) {
-        window.location.href = data.url;
       }
     } catch (error) {
       console.error("Error creating checkout session:", error);
