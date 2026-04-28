@@ -354,11 +354,19 @@ export default function Dashboard() {
                 ))}
               </ul>
               <button 
-                onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
-                disabled={loading}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20 disabled:opacity-50"
+                onClick={async () => {
+                  const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || 'TON_ID_PRO_ICI' }),
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                  else alert('Erreur API : ' + JSON.stringify(data));
+                }}
+                className="w-full py-4 rounded-2xl bg-red-600 text-white font-black hover:bg-red-700 transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-red-500/20"
               >
-                {loading ? "Chargement..." : "Passer au Plan Pro"}
+                TESTER LE PAIEMENT PRO (ROUGE)
               </button>
             </div>
 
