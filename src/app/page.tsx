@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Home() {
   const { user } = useUser();
+  const { isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
   const router = useRouter();
   const [url, setUrl] = useState("");
@@ -97,13 +98,6 @@ export default function Home() {
     }
   };
 
-  const handlePlanClick = () => {
-    if (!user) {
-      router.push("/sign-up");
-    } else {
-      router.push("/dashboard");
-    }
-  };
 
   const handleUnlock = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -331,12 +325,12 @@ export default function Home() {
                     >
                       PRENDRE RENDEZ-VOUS
                     </Link>
-                    <a
-                      href="#tarifs"
+                    <button
+                      onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
                       className="text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest cursor-pointer"
                     >
                       Voir nos offres de mise en conformité
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -420,7 +414,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={handlePlanClick}
+                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Essayer gratuitement
@@ -448,7 +442,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={handlePlanClick}
+                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Choisir ce plan
@@ -457,7 +451,7 @@ export default function Home() {
 
                 {/* Plan 3: Entreprise */}
                 <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border-2 border-teal-500/50 rounded-3xl p-8 flex flex-col space-y-8 shadow-2xl shadow-teal-500/10 hover:border-teal-400 transition-all z-20">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
                     Recommandé
                   </div>
                   <div className="space-y-2">
@@ -479,8 +473,8 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={handlePlanClick}
-                    className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all text-center"
+                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
+                    className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center"
                   >
                     Passer à l'Entreprise
                   </button>
