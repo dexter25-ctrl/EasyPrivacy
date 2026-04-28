@@ -5,6 +5,7 @@ import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -46,7 +47,11 @@ export default function Dashboard() {
         body: JSON.stringify({ priceId }),
       });
       const data = await response.json();
-      if (data.url) {
+      
+      if (data.sessionId) {
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+      } else if (data.url) {
         window.location.href = data.url;
       }
     } catch (error) {
