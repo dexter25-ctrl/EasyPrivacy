@@ -213,14 +213,14 @@ export default function Dashboard() {
             </div>
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-white">Support Prioritaire</h3>
-              <p className="text-white/40 text-sm">Une question urgente ? <br/>Nos experts vous répondent en moins de 2h.</p>
+              <p className="text-white/40 text-sm">Une question urgente ? <br/>Nos experts vous répondent en moins de 6h.</p>
             </div>
-            <a 
-              href="mailto:dextoolstudio@gmail.com?subject=Demande de rendez-vous - EasyPrivacy"
+            <Link 
+              href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
               className="bg-teal-500 text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl"
             >
               PRENDRE RENDEZ-VOUS
-            </a>
+            </Link>
           </div>
         </div>
       </div>
