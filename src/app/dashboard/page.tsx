@@ -219,7 +219,7 @@ export default function Dashboard() {
               href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
               className="bg-teal-500 text-slate-900 font-black px-8 py-3 rounded-xl hover:scale-105 transition-all shadow-xl"
             >
-              PRENDRE RENDEZ-VOUS
+              ME CONTACTER
             </Link>
           </div>
         </div>

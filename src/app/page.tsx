@@ -323,7 +323,7 @@ export default function Home() {
                       href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
                       className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center"
                     >
-                      PRENDRE RENDEZ-VOUS
+                      ME CONTACTER
                     </Link>
                     <button
                       onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
@@ -582,10 +582,20 @@ export default function Home() {
             <h4 className="text-white font-bold uppercase tracking-widest text-xs">Produit</h4>
             <ul className="space-y-4">
               <li>
-                <a href="#" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Audit en direct</a>
+                <button 
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="text-white/60 hover:text-teal-400 transition-colors text-sm"
+                >
+                  Audit en direct
+                </button>
               </li>
               <li>
-                <a href="#tarifs" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Tarifs</a>
+                <button 
+                  onClick={() => document.getElementById('tarifs')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-white/60 hover:text-teal-400 transition-colors text-sm"
+                >
+                  Tarifs
+                </button>
               </li>
             </ul>
           </div>
