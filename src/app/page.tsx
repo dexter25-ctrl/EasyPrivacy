@@ -413,12 +413,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
+                  <Link 
+                    href="/dashboard"
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     DÉBUTER GRATUITEMENT
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Plan 2: Pro */}
@@ -441,12 +441,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
+                  <Link 
+                    href="/dashboard"
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     DÉMARRER CE PLAN
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Plan 3: Entreprise */}
@@ -472,12 +472,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button 
-                    onClick={() => isSignedIn ? router.push('/dashboard') : router.push('/sign-up')}
+                  <Link 
+                    href="/dashboard"
                     className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center"
                   >
                     DÉMARRER AVEC L'ENTREPRISE
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
