@@ -354,19 +354,29 @@ export default function Dashboard() {
                 ))}
               </ul>
               <button 
-                onClick={async () => {
-                  const res = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || 'TON_ID_PRO_ICI' }),
-                  });
-                  const data = await res.json();
-                  if (data.url) window.location.href = data.url;
-                  else alert('Erreur API : ' + JSON.stringify(data));
+                onClick={async (e) => {
+                  e.preventDefault();
+                  alert('Étape 1 : Clic détecté');
+                  try {
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || 'TON_ID_PRO' }),
+                    });
+                    const data = await res.json();
+                    alert('Étape 2 : Réponse reçue de l\'API');
+                    if (data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      alert('Erreur : ' + (data.error || 'Pas d\'URL'));
+                    }
+                  } catch (err) {
+                    alert('Erreur fatale : ' + err);
+                  }
                 }}
                 className="w-full py-4 rounded-2xl bg-red-600 text-white font-black hover:bg-red-700 transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-red-500/20"
               >
-                TESTER LE PAIEMENT PRO (ROUGE)
+                COMMANDER LE PLAN PRO (TEST ALERTS)
               </button>
             </div>
 
