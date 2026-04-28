@@ -171,7 +171,7 @@ export default function Dashboard() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6">
-            <h2 className="text-xl font-bold text-white">Nous contacter</h2>
+            <h2 className="text-xl font-bold text-white">Contacter le Support</h2>
             <form onSubmit={handleContactSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest ml-1">Objet</label>
@@ -199,7 +199,7 @@ export default function Dashboard() {
                 type="submit"
                 className="w-full bg-white text-slate-900 font-black py-3 rounded-xl hover:scale-[1.02] transition-all shadow-xl"
               >
-                ENVOYER LE MESSAGE
+                ENVOYER PAR EMAIL
               </button>
             </form>
           </div>
