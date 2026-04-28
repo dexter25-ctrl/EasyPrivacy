@@ -81,12 +81,30 @@ export default function Dashboard() {
           >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all" />
             <div className="relative space-y-4">
-              <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Score de Conformité</h3>
-              <div className="flex items-end gap-3">
-                <span className="text-6xl font-black text-white">{displayAudit.score}%</span>
-                <div className="mb-2 w-12 h-1 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.8)]" />
+              <div className="flex justify-between items-start">
+                <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Score de Conformité</h3>
+                <div className="w-10 h-10 rounded-full border border-teal-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
               </div>
-              <p className="text-white/40 text-xs italic">Cliquer pour le détail analytique</p>
+              <div className="flex items-center gap-6">
+                <div className="relative w-20 h-20 flex items-center justify-center">
+                  <div 
+                    className="absolute inset-0 rounded-full" 
+                    style={{ background: `conic-gradient(#2dd4bf ${displayAudit.score}%, rgba(255,255,255,0.05) 0)` }}
+                  />
+                  <div className="absolute inset-[3px] bg-slate-900 rounded-full flex items-center justify-center">
+                    <span className="text-2xl font-black text-white">{displayAudit.score}%</span>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs font-bold text-teal-400 uppercase tracking-widest">Analyse Active</span>
+                  <p className="text-white/40 text-[10px]">Dernier scan : {displayAudit.date}</p>
+                </div>
+              </div>
+              <p className="text-white/40 text-[10px] italic pt-2">Cliquer pour le détail analytique</p>
             </div>
           </div>
 
@@ -122,7 +140,10 @@ export default function Dashboard() {
                   {displayAudit.score > 80 ? 'Sécurisé' : displayAudit.score > 50 ? 'Partiellement Conforme' : 'Non Conforme'}
                 </span>
               </div>
-              <p className="text-white/40 text-xs italic">Surveillance active en temps réel</p>
+              <div className="space-y-1">
+                <p className="text-white/40 text-xs italic">Surveillance active 24/7</p>
+                <p className="text-teal-400/60 text-[10px] font-bold uppercase tracking-widest">Mode surveillance PRO requis pour l'analyse automatique</p>
+              </div>
             </div>
           </div>
         </div>
@@ -243,6 +264,103 @@ export default function Dashboard() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* SECTION: Améliorez votre protection (Pricing) */}
+        <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-black text-white uppercase tracking-tight">Améliorez votre protection</h2>
+            <p className="text-white/40 text-lg">Choisissez le plan adapté à la croissance de votre entreprise.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-8 w-full">
+            {/* Plan 1: OFFRE TEST */}
+            <div className="relative bg-white/5 backdrop-blur-xl border border-teal-500/30 rounded-3xl p-8 flex flex-col space-y-8 hover:border-teal-500/50 transition-all group">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                Plan Actuel
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white">OFFRE TEST</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">0€</span>
+                  <span className="text-white/40 text-sm font-medium">/ à vie</span>
+                </div>
+                <p className="text-white/50 text-sm">Pour tester et comprendre vos failles.</p>
+              </div>
+              <ul className="space-y-4 flex-1">
+                {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-white/80">
+                    <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button className="w-full py-4 rounded-2xl bg-white/5 text-white/40 font-bold cursor-default border border-white/5 uppercase text-xs tracking-widest">
+                Votre Plan Actuel
+              </button>
+            </div>
+
+            {/* Plan 2: Pro */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group shadow-2xl">
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white">Pro</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">29€</span>
+                  <span className="text-white/40 text-sm font-medium">/ mois</span>
+                </div>
+                <p className="text-white/50 text-sm">La surveillance automatique pour les TPE/PME.</p>
+              </div>
+              <ul className="space-y-4 flex-1">
+                {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-white/80">
+                    <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <Link 
+                href="/dashboard"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 text-white font-black hover:scale-[1.02] transition-all text-center uppercase text-xs tracking-widest shadow-lg shadow-teal-500/20"
+              >
+                Passer au Plan Pro
+              </Link>
+            </div>
+
+            {/* Plan 3: Entreprise */}
+            <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border-2 border-teal-500/50 rounded-3xl p-8 flex flex-col space-y-8 shadow-2xl shadow-teal-500/10 hover:border-teal-400 transition-all z-20">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                Recommandé
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">Entreprise</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">79€</span>
+                  <span className="text-white/40 text-sm font-medium">/ mois</span>
+                </div>
+                <p className="text-white/50 text-sm">Le bouclier complet avec expert dédié.</p>
+              </div>
+              <ul className="space-y-4 flex-1">
+                {["Scan quotidien", "Support prioritaire 24/7", "Correctifs par nos experts"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-white/80">
+                    <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <Link 
+                href="/dashboard"
+                className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center uppercase text-xs tracking-widest"
+              >
+                Choisir ce plan
+              </Link>
+            </div>
           </div>
         </div>
       </div>
