@@ -97,6 +97,13 @@ export default function Home() {
     }
   };
 
+  const handlePlanClick = () => {
+    if (!user) {
+      router.push("/sign-up");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   const handleUnlock = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -412,12 +419,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href={user ? "/dashboard" : "/sign-up"}
+                  <button 
+                    onClick={handlePlanClick}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Essayer gratuitement
-                  </Link>
+                  </button>
                 </div>
 
                 {/* Plan 2: Pro */}
@@ -440,12 +447,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href={user ? "/dashboard" : "/sign-up"}
+                  <button 
+                    onClick={handlePlanClick}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
                   >
                     Choisir ce plan
-                  </Link>
+                  </button>
                 </div>
 
                 {/* Plan 3: Entreprise */}
@@ -471,12 +478,12 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href={user ? "/dashboard" : "/sign-up"}
+                  <button 
+                    onClick={handlePlanClick}
                     className="w-full py-4 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-black shadow-lg shadow-teal-500/20 transition-all text-center"
                   >
                     Passer à l'Entreprise
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
