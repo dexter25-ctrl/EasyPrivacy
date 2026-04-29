@@ -6,8 +6,11 @@ import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Plus, Minus, ChevronDown, CheckCircle2, Shield, FileText, Globe } from "lucide-react";
+import { Globe, Search, ArrowRight, ShieldCheck, CheckCircle2, Shield, Lock, FileText, Globe2, AlertCircle, Plus, Minus, ChevronDown } from "lucide-react";
+import { loadStripe } from "@stripe/stripe-js";
 import { translations, faqTranslations, Language } from "@/lib/translations";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function Home() {
   const [lang, setLang] = useState<Language>('fr');
