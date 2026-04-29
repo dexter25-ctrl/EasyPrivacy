@@ -76,6 +76,11 @@ function DashboardContent() {
   };
 
   const handlePlanClick = async (priceId: string) => {
+    if (!priceId) {
+      console.error("ID Stripe manquant (Entreprise)");
+      alert("Erreur : ID de produit Stripe manquant. Vérifiez vos variables d'environnement.");
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch("/api/checkout", {
@@ -425,7 +430,7 @@ function DashboardContent() {
                   ))}
                 </ul>
                 <button 
-                  onClick={() => !plan.active && plan.id && handlePlanClick(plan.id)}
+                  onClick={() => !plan.active && handlePlanClick(plan.id || "")}
                   className={`w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${plan.active ? 'bg-white/10 text-white/40 cursor-default' : 'bg-white text-slate-950 hover:bg-teal-400 hover:scale-[1.02]'}`}
                 >
                   {plan.active ? "Plan Actif" : "Choisir ce plan"}

@@ -159,6 +159,12 @@ export default function Home() {
   };
 
   const handlePlanClick = async (priceId: string) => {
+    if (!priceId) {
+      console.error("ID Stripe manquant (Entreprise)");
+      alert("Erreur : ID de produit Stripe manquant. Vérifiez vos variables d'environnement.");
+      return;
+    }
+
     if (!isSignedIn) {
       router.push("/sign-up");
       return;
@@ -500,7 +506,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "")}
+                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO)}
                     disabled={loading}
                     className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center disabled:opacity-50"
                   >
@@ -532,7 +538,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || "")}
+                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE)}
                     disabled={loading}
                     className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center disabled:opacity-50"
                   >
