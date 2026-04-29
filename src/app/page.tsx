@@ -789,13 +789,21 @@ export default function Home() {
             <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs">Légal</h4>
             <ul className="space-y-4">
               <li>
-                <Link href="/mentions-legales" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Mentions Légales</Link>
+                <Link href="/legal" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Mentions Légales</Link>
               </li>
               <li>
-                <Link href="/politique-confidentialite" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Politique de Confidentialité</Link>
+                <Link href="/privacy" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Politique de Confidentialité</Link>
               </li>
               <li>
-                <Link href="/cookies" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Gestion des Cookies</Link>
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem("cookie-consent");
+                    window.location.reload();
+                  }} 
+                  className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium"
+                >
+                  Gestion des Cookies
+                </button>
               </li>
             </ul>
           </div>
