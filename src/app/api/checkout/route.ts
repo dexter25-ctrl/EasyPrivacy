@@ -4,26 +4,34 @@ import Stripe from 'stripe';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  // 1. Vérification stricte de la clé secrète dès le début
+  const stripeSecret = process.env.STRIPE_SECRET_KEY;
+  if (!stripeSecret || !stripeSecret.startsWith('sk_')) {
+    console.error("ERREUR CRITIQUE: STRIPE_SECRET_KEY manquante ou invalide dans Vercel");
+    return NextResponse.json({ 
+      error: 'CLÉ SECRÈTE MANQUANTE OU INVALIDE DANS VERCEL',
+      details: "Assurez-vous d'avoir configuré STRIPE_SECRET_KEY (sk_live_...) dans les variables d'environnement Vercel."
+    }, { status: 500 });
+  }
+
   try {
     const body = await req.json();
     const { priceId, auditUrl, auditScore } = body;
 
-    console.log("--- DEBUG LIVE ---");
-    console.log("Price ID (10 chars):", priceId?.substring(0, 10));
+    console.log("--- TENTATIVE CHECKOUT ---");
+    console.log("Price ID:", priceId);
 
-    // 1. Validation de base
     if (!priceId) {
       return NextResponse.json({ error: "Missing Price ID" }, { status: 400 });
     }
 
-    // 2. Initialisation forcée avec !
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    // 2. Initialisation de Stripe à l'intérieur du handler
+    const stripe = new Stripe(stripeSecret, {
       apiVersion: '2023-10-16' as any,
     });
 
     const plan = priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE ? 'enterprise' : 'pro';
 
-    // 3. Création de session avec gestion d'erreur directe
     try {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -40,8 +48,7 @@ export async function POST(req: Request) {
 
       return NextResponse.json({ url: session.url });
     } catch (stripeError: any) {
-      console.error("STRIKE ERROR LOG:", stripeError.message);
-      // On renvoie l'erreur directe à l'utilisateur pour le debug front
+      console.error("STRIKE ERROR:", stripeError.message);
       return NextResponse.json({ error: stripeError.message }, { status: 500 });
     }
 
