@@ -76,6 +76,34 @@ export const translations = {
       statusUncompliant: "Non Conforme",
       monitoringActive: "Actif",
       monitoringLimited: "Limité",
+    },
+    blog: {
+      title: "DOSSIERS RGPD & PRIVACY",
+      subtitle: "Le Blog Expert",
+      ctaTitle: "Votre site est-il conforme ?",
+      ctaDesc: "Scannez-le gratuitement en 30 secondes",
+      ctaBtn: "Lancer le scan gratuit",
+      readingTime: "min de lecture",
+      articles: [
+        {
+          id: 1,
+          title: "RGPD en 2026 : Pourquoi 85% des PME risquent une amende (et comment l'éviter)",
+          excerpt: "Les contrôles automatisés de la CNIL s'intensifient. Découvrez comment protéger votre entreprise des sanctions liées à la conformité web.",
+          category: "Légal",
+          date: "29 Avril 2026",
+          readTime: "5",
+          image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800",
+        },
+        {
+          id: 2,
+          title: "Audit RGPD : Les 5 points critiques que vous ignorez sûrement",
+          excerpt: "Un simple bandeau cookie ne suffit plus. Voici les failles techniques que les outils d'audit détectent en premier.",
+          category: "Expertise",
+          date: "25 Avril 2026",
+          readTime: "4",
+          image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+        }
+      ]
     }
   },
   en: {
@@ -153,6 +181,34 @@ export const translations = {
       statusUncompliant: "Non-Compliant",
       monitoringActive: "Active",
       monitoringLimited: "Limited",
+    },
+    blog: {
+      title: "GDPR & PRIVACY DOSSIERS",
+      subtitle: "The Expert Blog",
+      ctaTitle: "Is your site compliant?",
+      ctaDesc: "Scan it for free in 30 seconds",
+      ctaBtn: "Launch free scan",
+      readingTime: "min read",
+      articles: [
+        {
+          id: 1,
+          title: "GDPR in 2026: Why 85% of SMEs risk a fine (and how to avoid it)",
+          excerpt: "Automated checks are intensifying. Discover how to protect your business from web compliance sanctions.",
+          category: "Legal",
+          date: "April 29, 2026",
+          readTime: "5",
+          image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800",
+        },
+        {
+          id: 2,
+          title: "GDPR Audit: The 5 critical points you probably ignore",
+          excerpt: "A simple cookie banner is no longer enough. Here are the technical flaws that audit tools detect first.",
+          category: "Expertise",
+          date: "April 25, 2026",
+          readTime: "4",
+          image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+        }
+      ]
     }
   }
 };
