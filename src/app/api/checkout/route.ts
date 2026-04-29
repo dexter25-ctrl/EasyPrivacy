@@ -13,8 +13,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "La clé STRIPE_SECRET_KEY est absente sur Vercel" }, { status: 500 });
     }
 
-    if (!body.priceId || body.priceId === 'TON_ID_PRO') {
-      return NextResponse.json({ error: "L'ID de produit (priceId) est manquant ou non configuré" }, { status: 400 });
+    if (!body.priceId) {
+      return NextResponse.json({ error: "L'ID de produit (priceId) est manquant" }, { status: 400 });
     }
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
