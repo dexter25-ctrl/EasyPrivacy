@@ -42,6 +42,11 @@ export const translations = {
     faqDesc: "Tout ce que vous devez savoir sur la conformité RGPD automatique.",
     footerBrand: "La solution automatisée pour la conformité RGPD de votre entreprise. Sécurisez votre avenir numérique.",
     footerCopyright: "© 2026 EasyPrivacy - La conformité simplifiée.",
+    pricing: {
+      free: ["Scan manuel illimité", "Rapport de score", "Conseils de base"],
+      pro: ["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"],
+      enterprise: ["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"],
+    },
     dashboard: {
       title: "Dashboard",
       subtitle: "Analyse de",
@@ -114,6 +119,11 @@ export const translations = {
     faqDesc: "Everything you need to know about automatic GDPR compliance.",
     footerBrand: "The automated solution for your company's GDPR compliance. Secure your digital future.",
     footerCopyright: "© 2026 EasyPrivacy - Compliance simplified.",
+    pricing: {
+      free: ["Unlimited manual scans", "Score report", "Basic advice"],
+      pro: ["Weekly scan", "Real-time email alerts", "Policy generator"],
+      enterprise: ["Daily scan", "24/7 priority support", "Dedicated DPO expert", "Quarterly audit"],
+    },
     dashboard: {
       title: "Dashboard",
       subtitle: "Analysis of",

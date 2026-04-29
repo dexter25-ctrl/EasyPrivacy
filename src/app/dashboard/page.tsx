@@ -438,13 +438,13 @@ function DashboardContent() {
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
             {[
-              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: currentPlan === 'free', id: "", plus: null },
-              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: currentPlan === 'pro', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '', plus: "Tout du plan Test, plus :" },
-              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: currentPlan === 'enterprise', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '', plus: "Tout du plan Pro, plus :" }
+              { name: t.planFree, price: "0", features: t.pricing.free, active: currentPlan === 'free', id: "", plus: null },
+              { name: t.planPro, price: "29", features: t.pricing.pro, active: currentPlan === 'pro', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '', plus: t.plusTest },
+              { name: t.planEnterprise, price: "79", features: t.pricing.enterprise, active: currentPlan === 'enterprise', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '', plus: t.plusPro }
             ].map((plan, i) => (
               <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
                 {plan.active && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase px-6 py-1.5 rounded-full">Actuel</div>
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-teal-500 text-slate-900 text-[10px] font-black uppercase px-6 py-1.5 rounded-full">{lang === 'fr' ? 'Actuel' : 'Current'}</div>
                 )}
                 <div className="space-y-4">
                   <h3 className="text-2xl font-black text-white tracking-widest">{plan.name}</h3>

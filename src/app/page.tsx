@@ -512,7 +512,7 @@ export default function Home() {
                 <p className="text-white/40 text-sm font-medium italic">{t.planFreeDesc}</p>
               </div>
               <ul className="space-y-4 flex-1">
-                {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
+                {t.pricing.free.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
                     <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
                     {feature}
@@ -541,7 +541,7 @@ export default function Home() {
                 <li className="text-xs font-black italic text-teal-400 mb-2">
                   {t.plusTest}
                 </li>
-                {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
+                {t.pricing.pro.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
                     <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
                     {feature}
@@ -562,7 +562,7 @@ export default function Home() {
               <div className="absolute -inset-[2px] bg-gradient-to-r from-teal-500 via-blue-600 to-teal-500 rounded-[2.5rem] blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
               <div className="relative bg-[#0a0f1d] backdrop-blur-3xl rounded-[2.5rem] p-10 flex flex-col space-y-8 shadow-2xl h-full border border-white/5">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-teal-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-xl">
-                  Recommandé
+                  {lang === 'fr' ? 'Recommandé' : 'Recommended'}
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-2xl font-black text-white tracking-widest">{t.planEnterprise}</h3>
@@ -576,7 +576,7 @@ export default function Home() {
                   <li className="text-xs font-black italic text-blue-400 mb-2">
                     {t.plusPro}
                   </li>
-                  {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
+                  {t.pricing.enterprise.map((feature, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
                       <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
                       {feature}
