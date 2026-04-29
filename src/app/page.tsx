@@ -159,6 +159,7 @@ export default function Home() {
   };
 
   const handlePlanClick = async (priceId: string) => {
+    console.log('ID reçu (handlePlanClick):', priceId);
     if (!priceId) {
       alert("Erreur : L'identifiant du plan est manquant.");
       return;
@@ -537,7 +538,11 @@ export default function Home() {
                     ))}
                   </ul>
                   <button 
-                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || '')}
+                    onClick={() => {
+                      const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
+                      console.log("Tentative de paiement Entreprise avec l'ID:", id);
+                      handlePlanClick(id || '');
+                    }}
                     disabled={loading}
                     className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center disabled:opacity-50"
                   >

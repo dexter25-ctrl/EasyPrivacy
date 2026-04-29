@@ -76,6 +76,7 @@ function DashboardContent() {
   };
 
   const handlePlanClick = async (priceId: string) => {
+    console.log('ID reçu (handlePlanClick):', priceId);
     if (!priceId) {
       alert("Erreur : L'identifiant du plan est manquant.");
       return;
@@ -408,7 +409,7 @@ function DashboardContent() {
             {[
               { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: !isPro, id: "" },
               { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: isPro, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '' },
-              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || '' }
+              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '' }
             ].map((plan, i) => (
               <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
                 {plan.active && (
