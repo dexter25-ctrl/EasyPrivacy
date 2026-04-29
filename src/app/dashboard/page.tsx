@@ -16,12 +16,29 @@ import {
   Lock,
   ArrowRight,
   FileText,
-  X
+  X,
+  Globe
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { translations, Language } from "@/lib/translations";
 
 function DashboardContent() {
+  const [lang, setLang] = useState<Language>('fr');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem("lang") as Language;
+    if (savedLang) setLang(savedLang);
+  }, []);
+
+  const toggleLang = () => {
+    const newLang = lang === 'fr' ? 'en' : 'fr';
+    setLang(newLang);
+    localStorage.setItem("lang", newLang);
+  };
+
+  const t = translations[lang];
+  const td = t.dashboard;
   const { user } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -185,6 +202,16 @@ function DashboardContent() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 sm:p-24 relative overflow-hidden bg-[#020617]">
+      {/* Language Selector */}
+      <div className="absolute top-8 right-8 z-50">
+        <button 
+          onClick={toggleLang}
+          className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-xl px-4 py-2 rounded-xl text-white text-xs font-black uppercase tracking-widest transition-all"
+        >
+          <Globe size={14} className="text-teal-400" />
+          {lang === 'fr' ? 'EN' : 'FR'}
+        </button>
+      </div>
       {/* Background Blurs */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -199,11 +226,11 @@ function DashboardContent() {
                 <CheckCircle size={24} />
               </div>
               <div>
-                <h3 className="text-emerald-400 font-black uppercase tracking-widest text-xs">Paiement Réussi</h3>
-                <p className="text-white font-medium text-sm">Votre abonnement {currentPlan === 'enterprise' ? 'Entreprise' : 'Pro'} est actif. Accédez maintenant à votre plan d'action personnalisé.</p>
+                <h3 className="text-emerald-400 font-black uppercase tracking-widest text-xs">{td.paymentSuccess}</h3>
+                <p className="text-white font-medium text-sm">{td.paymentSuccessDesc}</p>
               </div>
             </div>
-            <button onClick={() => setShowSuccessBanner(false)} className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all">Fermer</button>
+            <button onClick={() => setShowSuccessBanner(false)} className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all">{td.btnClose}</button>
           </div>
         )}
 
@@ -211,27 +238,27 @@ function DashboardContent() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div className="space-y-1">
             <h1 className="text-4xl font-black text-white tracking-tight flex items-center gap-4">
-              Dashboard <Shield className="text-teal-400" size={32} />
+              {td.title} <Shield className="text-teal-400" size={32} />
             </h1>
             <div className="flex items-center gap-2">
-              <p className="text-white/40 text-sm">Analyse de <span className="text-white font-bold">{displayAudit.url}</span></p>
+              <p className="text-white/40 text-sm">{td.subtitle} <span className="text-white font-bold">{displayAudit.url}</span></p>
               {currentPlan !== 'free' && (
                 <span className={`px-2 py-0.5 ${currentPlan === 'enterprise' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-teal-500/10 text-teal-400 border-teal-500/30'} border rounded-full text-[10px] font-black uppercase tracking-widest`}>
-                  Plan {currentPlan === 'enterprise' ? 'Entreprise' : 'Pro'}
+                  Plan {currentPlan === 'enterprise' ? t.planEnterprise : t.planPro}
                 </span>
               )}
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-2xl transition-all text-sm font-bold flex items-center gap-2">
-              <ArrowRight size={16} className="rotate-180" /> Accueil
+            <Link href="/" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-2xl transition-all text-sm font-bold flex items-center gap-2 uppercase tracking-widest text-[10px]">
+              <ArrowRight size={16} className="rotate-180" /> {td.backHome}
             </Link>
             <button 
               onClick={generatePDF} 
               disabled={currentPlan === 'free'} 
-              className={`${currentPlan !== 'free' ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-black px-8 py-3 rounded-2xl transition-all flex items-center gap-3`}
+              className={`${currentPlan !== 'free' ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-black px-8 py-3 rounded-2xl transition-all flex items-center gap-3 uppercase tracking-widest text-[10px]`}
             >
-              <Download size={18} /> Télécharger le rapport
+              <Download size={18} /> {td.downloadReport}
             </button>
           </div>
         </div>
@@ -243,7 +270,7 @@ function DashboardContent() {
             <div className="relative space-y-6">
               <div className="flex justify-between items-start">
                 <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                  <Shield size={14} className="text-teal-400" /> Score Global
+                  <Shield size={14} className="text-teal-400" /> {td.scoreTitle}
                 </h3>
                 <ChevronRight size={14} className="text-white/20 group-hover:text-teal-400 transition-colors" />
               </div>
@@ -276,7 +303,7 @@ function DashboardContent() {
             <div className="relative space-y-6">
               <div className="flex justify-between items-start">
                 <h3 className="text-white/60 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-red-400" /> Risques
+                  <AlertTriangle size={14} className="text-red-400" /> {td.risksTitle}
                 </h3>
                 <ChevronRight size={14} className="text-white/20 group-hover:text-red-400 transition-colors" />
               </div>
@@ -310,11 +337,11 @@ function DashboardContent() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full animate-pulse ${currentScore > 80 ? 'bg-teal-400 shadow-[0_0_15px_#2dd4bf]' : currentScore > 50 ? 'bg-orange-400 shadow-[0_0_15px_#fb923c]' : 'bg-red-500 shadow-[0_0_15px_#ef4444]'}`} />
-                  <span className="text-2xl font-black text-white">{currentScore > 80 ? 'Site Sécurisé' : currentScore > 50 ? 'Audit Partiel' : 'Non Conforme'}</span>
+                  <span className="text-2xl font-black text-white">{currentScore > 80 ? td.statusSecured : currentScore > 50 ? td.statusPartial : td.statusUncompliant}</span>
                 </div>
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-between">
-                  <span className="text-[10px] text-white/40 font-black uppercase">Statut Monitoring</span>
-                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{currentPlan !== 'free' ? 'Actif' : 'Limité'}</span>
+                  <span className="text-[10px] text-white/40 font-black uppercase">{td.monitoringTitle} Status</span>
+                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{currentPlan !== 'free' ? td.monitoringActive : td.monitoringLimited}</span>
                 </div>
               </div>
             </div>
@@ -330,8 +357,8 @@ function DashboardContent() {
                 <FileText size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-black text-white tracking-tight">Plan d'action prioritaire</h3>
-                <p className="text-white/40 text-xs">Suivez ces étapes pour atteindre les 100%.</p>
+                <h3 className="text-xl font-black text-white tracking-tight">{td.actionPlanTitle}</h3>
+                <p className="text-white/40 text-xs">{td.actionPlanDesc}</p>
               </div>
             </div>
 
@@ -381,23 +408,23 @@ function DashboardContent() {
                 <Mail size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-black text-white tracking-tight">Support Expert</h3>
-                <p className="text-white/40 text-sm">Posez vos questions techniques à un DPO.</p>
+                <h3 className="text-xl font-black text-white tracking-tight">{td.supportTitle}</h3>
+                <p className="text-white/40 text-sm">{td.supportDesc}</p>
               </div>
             </div>
             <form onSubmit={handleSendEmail} className="space-y-4">
               <input 
                 type="text" required value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
-                placeholder="Objet de votre demande"
+                placeholder={td.subjectPlaceholder}
                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none"
               />
               <textarea 
                 required value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
-                placeholder="Décrivez votre problématique..." rows={4}
+                placeholder={td.messagePlaceholder} rows={4}
                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:border-teal-500 transition-all outline-none resize-none"
               />
               <button type="submit" className="w-full bg-white text-slate-950 font-black py-4 rounded-2xl hover:bg-teal-400 transition-all shadow-xl uppercase text-xs tracking-widest">
-                Envoyer au support Pro
+                {td.btnSend}
               </button>
             </form>
           </div>
@@ -406,8 +433,8 @@ function DashboardContent() {
         {/* PRICING PLANS */}
         <div className="pt-20 space-y-12 pb-20">
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Choisissez votre protection</h2>
-            <p className="text-white/40 text-lg max-w-2xl mx-auto italic">Passez au niveau supérieur pour une conformité totale et automatisée.</p>
+            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">{td.choosePlanTitle}</h2>
+            <p className="text-white/40 text-lg max-w-2xl mx-auto italic">{td.choosePlanDesc}</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
             {[
@@ -442,7 +469,7 @@ function DashboardContent() {
                   onClick={() => !plan.active && handlePlanClick(plan.id || "")}
                   className={`w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${plan.active ? 'bg-white/10 text-white/40 cursor-default' : 'bg-white text-slate-950 hover:bg-teal-400 hover:scale-[1.02]'}`}
                 >
-                  {plan.active ? "Plan Actif" : "Choisir ce plan"}
+                  {plan.active ? td.btnActive : td.btnChoose}
                 </button>
               </div>
             ))}
@@ -461,7 +488,7 @@ function DashboardContent() {
                   <Info size={32} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-tight">Conseil Juridique</h3>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tight">{td.repairTitle}</h3>
                   <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1">{repairInfo}</p>
                 </div>
               </div>
@@ -469,7 +496,7 @@ function DashboardContent() {
                 {repairInfo && getRepairExplanation(repairInfo)}
               </p>
               <button onClick={() => setRepairInfo(null)} className="w-full bg-white text-slate-950 font-black py-4 rounded-2xl hover:bg-teal-400 transition-all uppercase text-xs tracking-widest">
-                J'ai compris
+                {td.repairBtn}
               </button>
             </div>
             <button onClick={() => setRepairInfo(null)} className="absolute top-8 right-8 text-white/20 hover:text-white transition-colors">

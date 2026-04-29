@@ -6,9 +6,26 @@ import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Plus, Minus, ChevronDown, CheckCircle2, Shield, FileText } from "lucide-react";
+import { Search, Plus, Minus, ChevronDown, CheckCircle2, Shield, FileText, Globe } from "lucide-react";
+import { translations, faqTranslations, Language } from "@/lib/translations";
 
 export default function Home() {
+  const [lang, setLang] = useState<Language>('fr');
+
+  // Charger la langue au démarrage
+  useEffect(() => {
+    const savedLang = localStorage.getItem("lang") as Language;
+    if (savedLang) setLang(savedLang);
+  }, []);
+
+  const toggleLang = () => {
+    const newLang = lang === 'fr' ? 'en' : 'fr';
+    setLang(newLang);
+    localStorage.setItem("lang", newLang);
+  };
+
+  const t = translations[lang];
+  const faqs = faqTranslations[lang];
   const { user } = useUser();
   const { isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
@@ -29,29 +46,6 @@ export default function Home() {
   const [modalEmail, setModalEmail] = useState("");
   const [modalSuccess, setModalSuccess] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      question: "Pourquoi la conformité RGPD est-elle obligatoire ?",
-      answer: "Depuis 2018, tout site web collectant des données (cookies, formulaires, analytics) doit respecter le RGPD. C'est une obligation légale pour protéger la vie privée de vos visiteurs."
-    },
-    {
-      question: "Quels sont les risques d'amendes avec la CNIL ?",
-      answer: "Les sanctions peuvent atteindre jusqu'à 4% de votre chiffre d'affaires mondial ou 20 millions d'euros. De plus en plus de contrôles automatisés sont effectués, ciblant même les TPE/PME."
-    },
-    {
-      question: "Comment EasyPrivacy rend mon site conforme automatiquement ?",
-      answer: "Notre algorithme scanne vos pages pour détecter les trackers non déclarés, vérifie vos mentions légales, et vous fournit un plan d'action immédiat pour tout corriger en quelques clics."
-    },
-    {
-      question: "Mon agence web a déjà fait le site, suis-je en règle ?",
-      answer: "Pas forcément. La majorité des agences se concentrent sur le design et oublient les paramètres de consentement stricts (comme le refus des cookies). Un audit indépendant est toujours recommandé."
-    },
-    {
-      question: "Dois-je payer pour faire le test de conformité ?",
-      answer: "Non, notre audit de base est 100% gratuit. Il vous permet de connaître immédiatement votre score et d'identifier vos principales failles juridiques sans engagement."
-    }
-  ];
 
   // Pré-remplir l'email si l'utilisateur est connecté
   useEffect(() => {
@@ -204,7 +198,17 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 sm:p-24 relative overflow-hidden">
-      {/* Decorative background blurs */}
+      {/* Language Selector */}
+      <div className="absolute top-8 right-8 z-50">
+        <button 
+          onClick={toggleLang}
+          className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-xl px-4 py-2 rounded-xl text-white text-xs font-black uppercase tracking-widest transition-all"
+        >
+          <Globe size={14} className="text-teal-400" />
+          {lang === 'fr' ? 'EN' : 'FR'}
+        </button>
+      </div>
+
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] pointer-events-none" />
 
@@ -217,13 +221,13 @@ export default function Home() {
           className="text-center space-y-6"
         >
           <div className="inline-block px-5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-black uppercase tracking-[0.2em] mb-4">
-            Analyseur de Conformité RGPD v2.0
+            {t.version}
           </div>
           <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-white to-blue-200 leading-[0.9]">
-            VOTRE SITE EST-IL <br className="hidden sm:block" /> <span className="text-teal-400">EN RÈGLE ?</span>
+            {t.title.split('?')[0]}? <br className="hidden sm:block" /> <span className="text-teal-400">{t.title.split('?')[1]}</span>
           </h1>
           <p className="text-white/50 text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-            Identifiez les failles juridiques de votre plateforme avant qu'il ne soit trop tard. <span className="text-white">Gratuit, instantané et précis.</span>
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -240,7 +244,7 @@ export default function Home() {
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="votre-site.com"
+                placeholder={t.inputPlaceholder}
                 required
                 className="w-full bg-black/60 border border-white/10 rounded-2xl px-7 py-5 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all text-lg font-medium"
               />
@@ -252,9 +256,9 @@ export default function Home() {
             >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               <span className="relative z-10 flex items-center gap-2 text-sm uppercase tracking-widest">
-                {loading ? "ANALYSE EN COURS..." : (
+                {loading ? t.btnAuditLoading : (
                   <>
-                    Lancer l'audit gratuit
+                    {t.btnAudit}
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 2 }}
@@ -288,7 +292,7 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 gap-6">
               {/* Score Card */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 flex flex-col items-center justify-center space-y-6">
-                <h2 className="text-xl text-white/80 font-bold uppercase tracking-widest">Score de Conformité</h2>
+                <h2 className="text-xl text-white/80 font-bold uppercase tracking-widest">{t.scoreTitle}</h2>
                 <div className="relative flex items-center justify-center w-48 h-48">
                   <svg className="w-full h-full transform -rotate-90">
                     <circle cx="96" cy="96" r="84" className="stroke-white/5" strokeWidth="16" fill="none" />
@@ -296,17 +300,16 @@ export default function Home() {
                       cx="96"
                       cy="96"
                       r="84"
-                      className={`${result.score > 70 ? 'stroke-teal-400' : result.score > 40 ? 'stroke-yellow-400' : 'stroke-red-400'} transition-all duration-1000 ease-out`}
+                      className={`${result.score > 80 ? 'stroke-teal-400' : result.score > 50 ? 'stroke-yellow-400' : 'stroke-red-500'}`}
                       strokeWidth="16"
                       fill="none"
-                      strokeDasharray="527.7"
-                      strokeDashoffset={527.7 - (527.7 * result.score) / 100}
+                      strokeDasharray={2 * Math.PI * 84}
+                      strokeDashoffset={2 * Math.PI * 84 * (1 - result.score / 100)}
                       strokeLinecap="round"
                     />
                   </svg>
-                  <div className="absolute flex flex-col items-center">
-                    <span className="text-6xl font-black">{result.score}</span>
-                    <span className="text-sm text-white/40 font-bold uppercase">Points</span>
+                  <div className="absolute inset-0 flex items-center justify-center flex-col">
+                    <span className="text-6xl font-black text-white">{result.score}%</span>
                   </div>
                 </div>
               </div>
@@ -318,7 +321,7 @@ export default function Home() {
                     <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    Points critiques détectés
+                    {t.criticalTitle}
                   </h2>
                   <ul className="space-y-3">
                     {result.criticalPoints.length > 0 ? result.criticalPoints.map((point, index) => (
@@ -401,23 +404,23 @@ export default function Home() {
                 <div className="bg-gradient-to-br from-teal-900/40 via-blue-900/20 to-transparent border border-teal-500/20 rounded-3xl p-10 text-center space-y-6 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-teal-500/10 transition-all"></div>
                   <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                    NE LAISSEZ PAS VOTRE SITE DANS L'ILLÉGALITÉ
+                    {t.ctaTitle}
                   </h3>
                   <p className="text-teal-100/60 max-w-xl mx-auto">
-                    Nos experts peuvent corriger tous ces points critiques en moins de 48h. Réservez une consultation gratuite pour faire le point.
+                    {t.ctaDesc}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link
                       href="mailto:dextoolstudio@gmail.com?subject=Demande de RDV EasyPrivacy"
-                      className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center"
+                      className="bg-white text-slate-900 font-black px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-center uppercase text-xs tracking-widest"
                     >
-                      CONTACTER NOTRE ÉQUIPE
+                      {t.btnContact}
                     </Link>
                     <Link
                       href="/dashboard"
-                      className="text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest cursor-pointer"
+                      className="text-white/60 hover:text-white transition-all text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer"
                     >
-                      Voir nos offres de mise en conformité
+                      {t.btnOffers}
                     </Link>
                   </div>
                 </div>
@@ -435,8 +438,8 @@ export default function Home() {
           className="pt-24 pb-8 space-y-16"
         >
           <div className="text-center space-y-4">
-            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Comment ça marche ?</h2>
-            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Une conformité simplifiée en 3 étapes clés.</p>
+            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">{t.howItWorksTitle}</h2>
+            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">{t.howItWorksDesc}</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-8">
@@ -447,9 +450,9 @@ export default function Home() {
                 <Search className="w-10 h-10 text-teal-400" />
               </div>
               <div className="relative z-10 space-y-4">
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Scan en temps réel</h3>
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">{t.step1Title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed font-medium">
-                  Nous analysons instantanément les scripts et cookies actifs sur votre page.
+                  {t.step1Desc}
                 </p>
               </div>
             </div>
@@ -461,9 +464,9 @@ export default function Home() {
                 <Shield className="w-10 h-10 text-blue-400" />
               </div>
               <div className="relative z-10 space-y-4">
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Vérification Juridique</h3>
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">{t.step2Title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed font-medium">
-                  Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
+                  {t.step2Desc}
                 </p>
               </div>
             </div>
@@ -475,9 +478,9 @@ export default function Home() {
                 <FileText className="w-10 h-10 text-teal-300" />
               </div>
               <div className="relative z-10 space-y-4">
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Plan d'Action</h3>
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">{t.step3Title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed font-medium">
-                  Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
+                  {t.step3Desc}
                 </p>
               </div>
             </div>
@@ -493,20 +496,20 @@ export default function Home() {
           className="pt-24 pb-8 space-y-16"
         >
           <div className="text-center space-y-4">
-            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Passez aux normes dès aujourd'hui</h2>
-            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Choisissez la protection adaptée à votre entreprise.</p>
+            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">{t.pricingTitle}</h2>
+            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">{t.pricingDesc}</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Plan 1: OFFRE TEST */}
             <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-white/30 transition-all group shadow-2xl relative overflow-hidden">
               <div className="space-y-4">
-                <h3 className="text-2xl font-black text-white tracking-widest">OFFRE TEST</h3>
+                <h3 className="text-2xl font-black text-white tracking-widest">{t.planFree}</h3>
                 <div className="flex items-baseline gap-1">
                   <span className="text-5xl font-black text-white">0€</span>
-                  <span className="text-white/40 text-sm font-black uppercase">/ à vie</span>
+                  <span className="text-white/40 text-sm font-black uppercase">{lang === 'fr' ? '/ à vie' : '/ forever'}</span>
                 </div>
-                <p className="text-white/40 text-sm font-medium italic">Pour tester et comprendre vos failles.</p>
+                <p className="text-white/40 text-sm font-medium italic">{t.planFreeDesc}</p>
               </div>
               <ul className="space-y-4 flex-1">
                 {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
@@ -520,23 +523,23 @@ export default function Home() {
                 href="/dashboard"
                 className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black transition-all text-center uppercase text-xs tracking-widest"
               >
-                Débuter gratuitement
+                {t.btnStartFree}
               </Link>
             </div>
 
             {/* Plan 2: Pro */}
             <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-teal-500/30 transition-all group shadow-2xl relative overflow-hidden">
               <div className="space-y-4">
-                <h3 className="text-2xl font-black text-white tracking-widest">Pro</h3>
+                <h3 className="text-2xl font-black text-white tracking-widest">{t.planPro}</h3>
                 <div className="flex items-baseline gap-1">
                   <span className="text-5xl font-black text-white">29€</span>
-                  <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
+                  <span className="text-white/40 text-sm font-black uppercase">{lang === 'fr' ? '/ mois' : '/ month'}</span>
                 </div>
-                <p className="text-white/40 text-sm font-medium italic">La surveillance automatique pour les TPE/PME.</p>
+                <p className="text-white/40 text-sm font-medium italic">{t.planProDesc}</p>
               </div>
               <ul className="space-y-4 flex-1">
                 <li className="text-xs font-black italic text-teal-400 mb-2">
-                  Tout du plan Test, plus :
+                  {t.plusTest}
                 </li>
                 {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
@@ -550,7 +553,7 @@ export default function Home() {
                 disabled={loading}
                 className="w-full py-5 rounded-2xl bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-lg shadow-teal-500/5"
               >
-                {loading ? "Chargement..." : "Démarrer ce plan"}
+                {loading ? (lang === 'fr' ? "Chargement..." : "Loading...") : t.btnStartPro}
               </button>
             </div>
 
@@ -562,16 +565,16 @@ export default function Home() {
                   Recommandé
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-black text-white tracking-widest">Entreprise</h3>
+                  <h3 className="text-2xl font-black text-white tracking-widest">{t.planEnterprise}</h3>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black text-white">79€</span>
-                    <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
+                    <span className="text-white/40 text-sm font-black uppercase">{lang === 'fr' ? '/ mois' : '/ month'}</span>
                   </div>
-                  <p className="text-white/40 text-sm font-medium italic">Le bouclier complet avec expert dédié.</p>
+                  <p className="text-white/40 text-sm font-medium italic">{t.planEnterpriseDesc}</p>
                 </div>
                 <ul className="space-y-4 flex-1">
                   <li className="text-xs font-black italic text-blue-400 mb-2">
-                    Tout du plan Pro, plus :
+                    {t.plusPro}
                   </li>
                   {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
@@ -588,7 +591,7 @@ export default function Home() {
                   disabled={loading}
                   className="w-full py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 hover:scale-[1.02] active:scale-[0.98] text-white font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-2xl shadow-blue-500/20"
                 >
-                  {loading ? "Chargement..." : "Démarrer avec l'entreprise"}
+                  {loading ? (lang === 'fr' ? "Chargement..." : "Loading...") : t.btnStartEnterprise}
                 </button>
               </div>
             </div>
@@ -679,8 +682,8 @@ export default function Home() {
         className="w-full max-w-4xl mx-auto mt-32 space-y-12 px-4 sm:px-0 relative z-10"
       >
         <div className="text-center space-y-4">
-          <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Foire aux questions</h2>
-          <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Tout ce que vous devez savoir sur la conformité RGPD automatique.</p>
+          <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">{t.faqTitle}</h2>
+          <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">{t.faqDesc}</p>
         </div>
         
         <div className="space-y-6">
@@ -746,7 +749,7 @@ export default function Home() {
               <span className="text-xl font-black text-white tracking-tighter">EasyPrivacy</span>
             </div>
             <p className="text-white/40 text-sm leading-relaxed">
-              La solution automatisée pour la conformité RGPD de votre entreprise. Sécurisez votre avenir numérique.
+              {t.footerBrand}
             </p>
           </div>
 
@@ -800,7 +803,7 @@ export default function Home() {
 
         <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
           <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">
-            © 2026 EasyPrivacy - La conformité simplifiée.
+            {t.footerCopyright}
           </p>
           
           <div className="flex items-center gap-8">
