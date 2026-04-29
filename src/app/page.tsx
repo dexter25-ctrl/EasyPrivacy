@@ -420,178 +420,180 @@ export default function Home() {
                       Voir nos offres de mise en conformité
                     </Link>
                   </div>
-               {/* Section Comment ça marche */}
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
-              className="pt-24 pb-8 space-y-16"
-            >
-              <div className="text-center space-y-4">
-                <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Comment ça marche ?</h2>
-                <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Une conformité simplifiée en 3 étapes clés.</p>
-              </div>
- 
-              <div className="grid sm:grid-cols-3 gap-8">
-                {/* Étape 1 */}
-                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-500/30 transition-all group relative overflow-hidden">
-                  <div className="absolute inset-0 bg-teal-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                  <div className="w-20 h-20 bg-teal-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
-                    <Search className="w-10 h-10 text-teal-400" />
-                  </div>
-                  <div className="relative z-10 space-y-4">
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Scan en temps réel</h3>
-                    <p className="text-white/50 text-sm leading-relaxed font-medium">
-                      Nous analysons instantanément les scripts et cookies actifs sur votre page.
-                    </p>
-                  </div>
-                </div>
- 
-                {/* Étape 2 */}
-                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-blue-500/30 transition-all group relative overflow-hidden">
-                  <div className="absolute inset-0 bg-blue-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                  <div className="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
-                    <Shield className="w-10 h-10 text-blue-400" />
-                  </div>
-                  <div className="relative z-10 space-y-4">
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Vérification Juridique</h3>
-                    <p className="text-white/50 text-sm leading-relaxed font-medium">
-                      Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
-                    </p>
-                  </div>
-                </div>
- 
-                {/* Étape 3 */}
-                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-400/30 transition-all group relative overflow-hidden">
-                  <div className="absolute inset-0 bg-teal-400/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                  <div className="w-20 h-20 bg-teal-400/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
-                    <FileText className="w-10 h-10 text-teal-300" />
-                  </div>
-                  <div className="relative z-10 space-y-4">
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Plan d'Action</h3>
-                    <p className="text-white/50 text-sm leading-relaxed font-medium">
-                      Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
-                    </p>
-                  </div>
                 </div>
               </div>
-            </motion.div>                {/* Pricing Section */}
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="pt-24 pb-8 space-y-16"
-            >
-              <div className="text-center space-y-4">
-                <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Passez aux normes dès aujourd'hui</h2>
-                <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Choisissez la protection adaptée à votre entreprise.</p>
+            )}
+          </div>
+        )}
+
+        {/* Section Comment ça marche */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="pt-24 pb-8 space-y-16"
+        >
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Comment ça marche ?</h2>
+            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Une conformité simplifiée en 3 étapes clés.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-8">
+            {/* Étape 1 */}
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-500/30 transition-all group relative overflow-hidden">
+              <div className="absolute inset-0 bg-teal-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <div className="w-20 h-20 bg-teal-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                <Search className="w-10 h-10 text-teal-400" />
               </div>
- 
-              <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                {/* Plan 1: OFFRE TEST */}
-                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-white/30 transition-all group shadow-2xl relative overflow-hidden">
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-black text-white tracking-widest">OFFRE TEST</h3>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-5xl font-black text-white">0€</span>
-                      <span className="text-white/40 text-sm font-black uppercase">/ à vie</span>
-                    </div>
-                    <p className="text-white/40 text-sm font-medium italic">Pour tester et comprendre vos failles.</p>
-                  </div>
-                  <ul className="space-y-4 flex-1">
-                    {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
-                        <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link 
-                    href="/dashboard"
-                    className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black transition-all text-center uppercase text-xs tracking-widest"
-                  >
-                    Débuter gratuitement
-                  </Link>
-                </div>
- 
-                {/* Plan 2: Pro */}
-                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-teal-500/30 transition-all group shadow-2xl relative overflow-hidden">
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-black text-white tracking-widest">Pro</h3>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-5xl font-black text-white">29€</span>
-                      <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
-                    </div>
-                    <p className="text-white/40 text-sm font-medium italic">La surveillance automatique pour les TPE/PME.</p>
-                  </div>
-                  <ul className="space-y-4 flex-1">
-                    <li className="text-xs font-black italic text-teal-400 mb-2">
-                      Tout du plan Test, plus :
-                    </li>
-                    {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
-                        <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <button 
-                    onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '')}
-                    disabled={loading}
-                    className="w-full py-5 rounded-2xl bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-lg shadow-teal-500/5"
-                  >
-                    {loading ? "Chargement..." : "Démarrer ce plan"}
-                  </button>
-                </div>
- 
-                {/* Plan 3: Entreprise */}
-                <div className="relative group">
-                  <div className="absolute -inset-[2px] bg-gradient-to-r from-teal-500 via-blue-600 to-teal-500 rounded-[2.5rem] blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
-                  <div className="relative bg-[#0a0f1d] backdrop-blur-3xl rounded-[2.5rem] p-10 flex flex-col space-y-8 shadow-2xl h-full border border-white/5">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-teal-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-xl">
-                      Recommandé
-                    </div>
-                    <div className="space-y-4">
-                      <h3 className="text-2xl font-black text-white tracking-widest">Entreprise</h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-5xl font-black text-white">79€</span>
-                        <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
-                      </div>
-                      <p className="text-white/40 text-sm font-medium italic">Le bouclier complet avec expert dédié.</p>
-                    </div>
-                    <ul className="space-y-4 flex-1">
-                      <li className="text-xs font-black italic text-blue-400 mb-2">
-                        Tout du plan Pro, plus :
-                      </li>
-                      {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
-                        <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
-                          <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <button 
-                      onClick={() => {
-                        const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
-                        handlePlanClick(id || '');
-                      }}
-                      disabled={loading}
-                      className="w-full py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 hover:scale-[1.02] active:scale-[0.98] text-white font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-2xl shadow-blue-500/20"
-                    >
-                      {loading ? "Chargement..." : "Démarrer avec l'entreprise"}
-                    </button>
-                  </div>
-                </div>
+              <div className="relative z-10 space-y-4">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Scan en temps réel</h3>
+                <p className="text-white/50 text-sm leading-relaxed font-medium">
+                  Nous analysons instantanément les scripts et cookies actifs sur votre page.
+                </p>
               </div>
-            </motion.div>RISE"}
-                  </button>
-                </div>
+            </div>
+
+            {/* Étape 2 */}
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-blue-500/30 transition-all group relative overflow-hidden">
+              <div className="absolute inset-0 bg-blue-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <div className="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                <Shield className="w-10 h-10 text-blue-400" />
+              </div>
+              <div className="relative z-10 space-y-4">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Vérification Juridique</h3>
+                <p className="text-white/50 text-sm leading-relaxed font-medium">
+                  Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
+                </p>
+              </div>
+            </div>
+
+            {/* Étape 3 */}
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-400/30 transition-all group relative overflow-hidden">
+              <div className="absolute inset-0 bg-teal-400/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <div className="w-20 h-20 bg-teal-400/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                <FileText className="w-10 h-10 text-teal-300" />
+              </div>
+              <div className="relative z-10 space-y-4">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tight">Plan d'Action</h3>
+                <p className="text-white/50 text-sm leading-relaxed font-medium">
+                  Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
+                </p>
               </div>
             </div>
           </div>
-        )}
+        </motion.div>
+
+        {/* Pricing Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="pt-24 pb-8 space-y-16"
+        >
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Passez aux normes dès aujourd'hui</h2>
+            <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Choisissez la protection adaptée à votre entreprise.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Plan 1: OFFRE TEST */}
+            <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-white/30 transition-all group shadow-2xl relative overflow-hidden">
+              <div className="space-y-4">
+                <h3 className="text-2xl font-black text-white tracking-widest">OFFRE TEST</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-black text-white">0€</span>
+                  <span className="text-white/40 text-sm font-black uppercase">/ à vie</span>
+                </div>
+                <p className="text-white/40 text-sm font-medium italic">Pour tester et comprendre vos failles.</p>
+              </div>
+              <ul className="space-y-4 flex-1">
+                {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                    <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <Link 
+                href="/dashboard"
+                className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black transition-all text-center uppercase text-xs tracking-widest"
+              >
+                Débuter gratuitement
+              </Link>
+            </div>
+
+            {/* Plan 2: Pro */}
+            <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-teal-500/30 transition-all group shadow-2xl relative overflow-hidden">
+              <div className="space-y-4">
+                <h3 className="text-2xl font-black text-white tracking-widest">Pro</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-black text-white">29€</span>
+                  <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
+                </div>
+                <p className="text-white/40 text-sm font-medium italic">La surveillance automatique pour les TPE/PME.</p>
+              </div>
+              <ul className="space-y-4 flex-1">
+                <li className="text-xs font-black italic text-teal-400 mb-2">
+                  Tout du plan Test, plus :
+                </li>
+                {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                    <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button 
+                onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '')}
+                disabled={loading}
+                className="w-full py-5 rounded-2xl bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-lg shadow-teal-500/5"
+              >
+                {loading ? "Chargement..." : "Démarrer ce plan"}
+              </button>
+            </div>
+
+            {/* Plan 3: Entreprise */}
+            <div className="relative group">
+              <div className="absolute -inset-[2px] bg-gradient-to-r from-teal-500 via-blue-600 to-teal-500 rounded-[2.5rem] blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
+              <div className="relative bg-[#0a0f1d] backdrop-blur-3xl rounded-[2.5rem] p-10 flex flex-col space-y-8 shadow-2xl h-full border border-white/5">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-teal-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-xl">
+                  Recommandé
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-black text-white tracking-widest">Entreprise</h3>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-5xl font-black text-white">79€</span>
+                    <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
+                  </div>
+                  <p className="text-white/40 text-sm font-medium italic">Le bouclier complet avec expert dédié.</p>
+                </div>
+                <ul className="space-y-4 flex-1">
+                  <li className="text-xs font-black italic text-blue-400 mb-2">
+                    Tout du plan Pro, plus :
+                  </li>
+                  {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                      <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <button 
+                  onClick={() => {
+                    const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
+                    handlePlanClick(id || '');
+                  }}
+                  disabled={loading}
+                  className="w-full py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 hover:scale-[1.02] active:scale-[0.98] text-white font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-2xl shadow-blue-500/20"
+                >
+                  {loading ? "Chargement..." : "Démarrer avec l'entreprise"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* MODAL EXPORT */}
