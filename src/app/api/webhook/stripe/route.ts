@@ -2,13 +2,15 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 
-// Initialisation de Stripe et Resend
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2023-10-16' as any,
-});
-const resend = new Resend(process.env.RESEND_API_KEY);
+// On initialise au besoin dans le handler pour éviter les erreurs de build si les clés manquent
+
 
 export async function POST(req: Request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: '2023-10-16' as any,
+  });
+  const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+
   const payload = await req.text();
   const signature = req.headers.get('stripe-signature') as string;
 
@@ -22,8 +24,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
   } catch (err: any) {
-    console.error('Erreur Webhook:', err.message);
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+    return NextResponse.json({ error: "Webhook Error" }, { status: 400 });
   }
 
   // Écouter l'événement checkout terminé
@@ -86,9 +87,8 @@ export async function POST(req: Request) {
           subject: '🎉 Bienvenue chez EasyPrivacy - Votre rapport est prêt !',
           html: emailHtml,
         });
-        console.log("Email envoyé avec succès à:", customerEmail);
       } catch (emailError) {
-        console.error("Erreur lors de l'envoi de l'email:", emailError);
+        // Silent error
       }
     }
   }

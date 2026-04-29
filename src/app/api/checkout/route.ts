@@ -6,11 +6,9 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("Requête reçue pour priceId:", body.priceId);
 
     if (!process.env.STRIPE_SECRET_KEY) {
-      console.error("Clé STRIPE_SECRET_KEY manquante");
-      return NextResponse.json({ error: "La clé STRIPE_SECRET_KEY est absente sur Vercel" }, { status: 500 });
+      return NextResponse.json({ error: "Configuration Error" }, { status: 500 });
     }
 
     if (!body.priceId) {
@@ -38,7 +36,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
-    console.error("Erreur Stripe détaillée:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: "Payment Session Error" }, { status: 500 });
   }
 }
