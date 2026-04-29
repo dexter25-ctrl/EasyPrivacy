@@ -77,8 +77,7 @@ function DashboardContent() {
 
   const handlePlanClick = async (priceId: string) => {
     if (!priceId) {
-      console.error("ID Stripe manquant (Entreprise)");
-      alert("Erreur : ID de produit Stripe manquant. Vérifiez vos variables d'environnement.");
+      alert("Erreur : L'identifiant du plan est manquant.");
       return;
     }
     try {
@@ -408,8 +407,8 @@ function DashboardContent() {
           <div className="grid sm:grid-cols-3 gap-8">
             {[
               { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: !isPro, id: "" },
-              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: isPro, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO },
-              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE }
+              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: isPro, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '' },
+              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE || '' }
             ].map((plan, i) => (
               <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
                 {plan.active && (
