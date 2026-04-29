@@ -159,11 +159,7 @@ export default function Home() {
   };
 
   const handlePlanClick = async (priceId: string) => {
-    console.log('ID reçu (handlePlanClick):', priceId);
-    if (!priceId) {
-      alert("Erreur : L'identifiant du plan est manquant.");
-      return;
-    }
+    if (!priceId) return;
 
     if (!isSignedIn) {
       router.push("/sign-up");
@@ -540,7 +536,6 @@ export default function Home() {
                   <button 
                     onClick={() => {
                       const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
-                      console.log("Tentative de paiement Entreprise avec l'ID:", id);
                       handlePlanClick(id || '');
                     }}
                     disabled={loading}

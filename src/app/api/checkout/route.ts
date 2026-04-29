@@ -21,15 +21,18 @@ export async function POST(req: Request) {
       apiVersion: '2023-10-16' as any,
     });
 
+    const plan = body.priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE ? 'enterprise' : 'pro';
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{ price: body.priceId, quantity: 1 }],
       mode: 'subscription',
-      success_url: `https://easy-privacy.vercel.app/dashboard?success=true`,
+      success_url: `https://easy-privacy.vercel.app/dashboard?success=true&plan=${plan}`,
       cancel_url: `https://easy-privacy.vercel.app/dashboard?canceled=true`,
       metadata: {
         auditUrl: body.auditUrl || 'Non spécifié',
         auditScore: body.auditScore?.toString() || '0',
+        plan: plan
       }
     });
 

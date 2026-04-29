@@ -34,7 +34,7 @@ function DashboardContent() {
   } | null>(null);
 
   // States pour l'abonnement
-  const [isPro, setIsPro] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState<'free' | 'pro' | 'enterprise'>('free');
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
 
   // States pour la checklist interactive
@@ -56,14 +56,18 @@ function DashboardContent() {
       setLastAudit(JSON.parse(savedAudit));
     }
 
-    // Charger le statut Pro
-    const savedIsPro = localStorage.getItem("isPro") === "true";
-    setIsPro(savedIsPro);
+    // Charger le plan
+    const savedPlan = localStorage.getItem("currentPlan") as any;
+    if (savedPlan) {
+      setCurrentPlan(savedPlan);
+    }
 
     // Détecter le succès du paiement
     if (searchParams.get("success") === "true") {
-      setIsPro(true);
-      localStorage.setItem("isPro", "true");
+      const planFromUrl = searchParams.get("plan");
+      const newPlan = planFromUrl === 'enterprise' ? 'enterprise' : 'pro';
+      setCurrentPlan(newPlan);
+      localStorage.setItem("currentPlan", newPlan);
       setShowSuccessBanner(true);
       window.history.replaceState({}, '', '/dashboard');
     }
@@ -76,11 +80,7 @@ function DashboardContent() {
   };
 
   const handlePlanClick = async (priceId: string) => {
-    console.log('ID reçu (handlePlanClick):', priceId);
-    if (!priceId) {
-      alert("Erreur : L'identifiant du plan est manquant.");
-      return;
-    }
+    if (!priceId) return;
     try {
       setLoading(true);
       const response = await fetch("/api/checkout", {
@@ -200,7 +200,7 @@ function DashboardContent() {
               </div>
               <div>
                 <h3 className="text-emerald-400 font-black uppercase tracking-widest text-xs">Paiement Réussi</h3>
-                <p className="text-white font-medium text-sm">Votre abonnement Pro est actif. Accédez maintenant à votre plan d'action personnalisé.</p>
+                <p className="text-white font-medium text-sm">Votre abonnement {currentPlan === 'enterprise' ? 'Entreprise' : 'Pro'} est actif. Accédez maintenant à votre plan d'action personnalisé.</p>
               </div>
             </div>
             <button onClick={() => setShowSuccessBanner(false)} className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-xs font-black uppercase transition-all">Fermer</button>
@@ -215,7 +215,11 @@ function DashboardContent() {
             </h1>
             <div className="flex items-center gap-2">
               <p className="text-white/40 text-sm">Analyse de <span className="text-white font-bold">{displayAudit.url}</span></p>
-              {isPro && <span className="px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/30 rounded-full text-[10px] font-black uppercase tracking-widest">Plan Pro</span>}
+              {currentPlan !== 'free' && (
+                <span className={`px-2 py-0.5 ${currentPlan === 'enterprise' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-teal-500/10 text-teal-400 border-teal-500/30'} border rounded-full text-[10px] font-black uppercase tracking-widest`}>
+                  Plan {currentPlan === 'enterprise' ? 'Entreprise' : 'Pro'}
+                </span>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -224,8 +228,8 @@ function DashboardContent() {
             </Link>
             <button 
               onClick={generatePDF} 
-              disabled={!isPro} 
-              className={`${isPro ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-black px-8 py-3 rounded-2xl transition-all flex items-center gap-3`}
+              disabled={currentPlan === 'free'} 
+              className={`${currentPlan !== 'free' ? 'bg-gradient-to-r from-teal-500 to-blue-600 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:scale-105' : 'bg-white/5 opacity-50 cursor-not-allowed'} text-white font-black px-8 py-3 rounded-2xl transition-all flex items-center gap-3`}
             >
               <Download size={18} /> Télécharger le rapport
             </button>
@@ -310,7 +314,7 @@ function DashboardContent() {
                 </div>
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-between">
                   <span className="text-[10px] text-white/40 font-black uppercase">Statut Monitoring</span>
-                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{isPro ? 'Actif' : 'Limité'}</span>
+                  <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest">{currentPlan !== 'free' ? 'Actif' : 'Limité'}</span>
                 </div>
               </div>
             </div>
@@ -332,7 +336,7 @@ function DashboardContent() {
             </div>
 
             <div className="space-y-4 flex-1">
-              {isPro ? (
+              {currentPlan !== 'free' ? (
                 displayAudit.criticalPoints.map((point, i) => (
                   <div key={i} className={`flex items-center gap-4 p-5 rounded-2xl border transition-all ${completedTasks.includes(point) ? 'bg-teal-500/10 border-teal-500/30' : 'bg-white/5 border-white/10 hover:border-white/20'}`}>
                     <button 
@@ -407,9 +411,9 @@ function DashboardContent() {
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
             {[
-              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: !isPro, id: "" },
-              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: isPro, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '' },
-              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: false, id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '' }
+              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: currentPlan === 'free', id: "" },
+              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: currentPlan === 'pro', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '' },
+              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: currentPlan === 'enterprise', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '' }
             ].map((plan, i) => (
               <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
                 {plan.active && (

@@ -33,6 +33,8 @@ export async function POST(req: Request) {
     // Récupération de l'email du client via la session Stripe
     const customerEmail = session.customer_details?.email;
     const auditUrl = session.metadata?.auditUrl || 'votre site';
+    const plan = session.metadata?.plan || 'pro';
+    const planName = plan === 'enterprise' ? 'Entreprise' : 'Pro';
 
     if (customerEmail) {
       const emailHtml = `
@@ -49,9 +51,9 @@ export async function POST(req: Request) {
           </div>
           
           <div style="background-color: rgba(255, 255, 255, 0.05); padding: 32px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-            <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Votre rapport est prêt ! 🎉</h2>
+            <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Votre plan ${planName} est activé ! 🎉</h2>
             <p style="color: #94a3b8; line-height: 1.6; font-size: 15px;">
-              Merci pour votre confiance. Votre paiement a bien été validé et le rapport de conformité pour <strong>${auditUrl}</strong> est disponible.
+              Merci pour votre confiance. Votre paiement a bien été validé et votre protection pour <strong>${auditUrl}</strong> est maintenant active sous le plan ${planName}.
             </p>
             
             <p style="color: #94a3b8; line-height: 1.6; font-size: 15px;">
