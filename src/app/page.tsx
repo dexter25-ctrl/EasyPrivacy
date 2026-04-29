@@ -798,12 +798,18 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-white/20 text-[10px] font-medium uppercase tracking-[0.2em]">
-            © 2026 EasyPrivacy Compliance SaaS - Sécurisé par chiffrement AES-256
+        <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
+          <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">
+            © 2026 EasyPrivacy - La conformité simplifiée.
           </p>
-          <div className="flex gap-6">
-            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" title="Système opérationnel"></div>
+          
+          <div className="flex items-center gap-8">
+            <div className="flex gap-4">
+              {['Twitter', 'LinkedIn', 'Github'].map((social) => (
+                <a key={social} href="#" className="text-white/20 hover:text-teal-400 transition-colors text-[10px] font-black uppercase tracking-widest">{social}</a>
+              ))}
+            </div>
+            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse shadow-[0_0_10px_rgba(45,212,191,0.5)]" title="Système opérationnel"></div>
           </div>
         </div>
       </footer>
