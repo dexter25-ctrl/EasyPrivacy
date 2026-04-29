@@ -5,6 +5,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Plus, Minus, ChevronDown, CheckCircle2, Shield, FileText } from "lucide-react";
 
 export default function Home() {
   const { user } = useUser();
@@ -208,21 +210,31 @@ export default function Home() {
 
       <div className="w-full max-w-4xl z-10 space-y-12">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="inline-block px-4 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-sm font-medium mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center space-y-6"
+        >
+          <div className="inline-block px-5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-black uppercase tracking-[0.2em] mb-4">
             Analyseur de Conformité RGPD v2.0
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-white to-blue-200 leading-tight">
-            VOTRE SITE EST-IL <br className="hidden sm:block" /> EN RÈGLE ?
+          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-white to-blue-200 leading-[0.9]">
+            VOTRE SITE EST-IL <br className="hidden sm:block" /> <span className="text-teal-400">EN RÈGLE ?</span>
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Identifiez les failles juridiques de votre plateforme avant qu'il ne soit trop tard. Gratuit, instantané et précis.
+          <p className="text-white/50 text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+            Identifiez les failles juridiques de votre plateforme avant qu'il ne soit trop tard. <span className="text-white">Gratuit, instantané et précis.</span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Input Panel */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative group transition-all hover:border-teal-500/30">
-          <form onSubmit={handleAudit} className="flex flex-col sm:flex-row gap-4">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 shadow-2xl relative group transition-all hover:border-teal-500/30 ring-1 ring-white/5"
+        >
+          <form onSubmit={handleAudit} className="flex flex-col sm:flex-row gap-5">
             <div className="flex-1 relative">
               <input
                 type="text"
@@ -230,19 +242,35 @@ export default function Home() {
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="votre-site.com"
                 required
-                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all"
+                className="w-full bg-black/60 border border-white/10 rounded-2xl px-7 py-5 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all text-lg font-medium"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-slate-900 font-bold px-10 py-4 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2"
+              className="group relative overflow-hidden bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-400 hover:to-blue-500 text-slate-950 font-black px-12 py-5 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-teal-500/20 flex items-center justify-center gap-3 min-w-[280px]"
             >
-              {loading ? "ANALYSE EN COURS..." : "LANCER L'AUDIT GRATUIT"}
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              <span className="relative z-10 flex items-center gap-2 text-sm uppercase tracking-widest">
+                {loading ? "ANALYSE EN COURS..." : (
+                  <>
+                    Lancer l'audit gratuit
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                    >
+                      <Search size={18} strokeWidth={3} />
+                    </motion.div>
+                  </>
+                )}
+              </span>
             </button>
           </form>
-          {error && <p className="text-red-400 mt-4 text-center font-medium">{error}</p>}
-        </div>
+          {error && <p className="text-red-400 mt-6 text-center font-bold flex items-center justify-center gap-2 bg-red-400/10 py-3 rounded-xl border border-red-400/20">
+            <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+            {error}
+          </p>}
+        </motion.div>
 
         {/* Loading State / Skeleton */}
         {loading && (
@@ -392,114 +420,119 @@ export default function Home() {
                       Voir nos offres de mise en conformité
                     </Link>
                   </div>
-                </div>
+               {/* Section Comment ça marche */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8 }}
+              className="pt-24 pb-8 space-y-16"
+            >
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Comment ça marche ?</h2>
+                <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Une conformité simplifiée en 3 étapes clés.</p>
               </div>
-            )}
-
-            {/* Section Comment ça marche */}
-            <div className="pt-16 pb-8 space-y-12">
-              <div className="text-center space-y-3">
-                <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Comment ça marche ?</h2>
-                <p className="text-white/60 text-lg">Une conformité simplifiée en 3 étapes clés.</p>
-              </div>
-
+ 
               <div className="grid sm:grid-cols-3 gap-8">
                 {/* Étape 1 */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
-                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-teal-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <div className="w-20 h-20 bg-teal-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                    <Search className="w-10 h-10 text-teal-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Scan en temps réel</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">
-                    Nous analysons instantanément les scripts et cookies actifs sur votre page.
-                  </p>
+                  <div className="relative z-10 space-y-4">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Scan en temps réel</h3>
+                    <p className="text-white/50 text-sm leading-relaxed font-medium">
+                      Nous analysons instantanément les scripts et cookies actifs sur votre page.
+                    </p>
+                  </div>
                 </div>
-
+ 
                 {/* Étape 2 */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
-                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-blue-500/30 transition-all group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-blue-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <div className="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                    <Shield className="w-10 h-10 text-blue-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Vérification Juridique</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">
-                    Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
-                  </p>
+                  <div className="relative z-10 space-y-4">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Vérification Juridique</h3>
+                    <p className="text-white/50 text-sm leading-relaxed font-medium">
+                      Nous contrôlons la présence du bandeau de consentement et des pages légales obligatoires.
+                    </p>
+                  </div>
                 </div>
-
+ 
                 {/* Étape 3 */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center space-y-6 hover:border-teal-500/30 transition-all group">
-                  <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <svg className="w-8 h-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 text-center space-y-8 hover:border-teal-400/30 transition-all group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-teal-400/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <div className="w-20 h-20 bg-teal-400/10 rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform relative z-10">
+                    <FileText className="w-10 h-10 text-teal-300" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Plan d'Action</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">
-                    Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
-                  </p>
+                  <div className="relative z-10 space-y-4">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Plan d'Action</h3>
+                    <p className="text-white/50 text-sm leading-relaxed font-medium">
+                      Vous recevez un score précis et la liste des correctifs à appliquer pour éviter les amendes de la CNIL.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Pricing Section */}
-            <div className="pt-16 pb-8 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-              <div className="text-center space-y-3">
-                <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Passez aux normes dès aujourd'hui</h2>
-                <p className="text-white/60 text-lg">Choisissez la protection adaptée à votre entreprise.</p>
+            </motion.div>                {/* Pricing Section */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="pt-24 pb-8 space-y-16"
+            >
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Passez aux normes dès aujourd'hui</h2>
+                <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Choisissez la protection adaptée à votre entreprise.</p>
               </div>
-
+ 
               <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {/* Plan 1: OFFRE TEST */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-white">OFFRE TEST</h3>
+                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-white/30 transition-all group shadow-2xl relative overflow-hidden">
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-black text-white tracking-widest">OFFRE TEST</h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">0€</span>
-                      <span className="text-white/40 text-sm font-medium">/ à vie</span>
+                      <span className="text-5xl font-black text-white">0€</span>
+                      <span className="text-white/40 text-sm font-black uppercase">/ à vie</span>
                     </div>
-                    <p className="text-white/50 text-sm">Pour tester et comprendre vos failles.</p>
+                    <p className="text-white/40 text-sm font-medium italic">Pour tester et comprendre vos failles.</p>
                   </div>
                   <ul className="space-y-4 flex-1">
                     {["Scan manuel illimité", "Rapport de score", "Conseils de base"].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-white/80">
-                        <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
+                      <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                        <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <Link 
                     href="/dashboard"
-                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center"
+                    className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black transition-all text-center uppercase text-xs tracking-widest"
                   >
-                    DÉBUTER GRATUITEMENT
+                    Débuter gratuitement
                   </Link>
                 </div>
-
+ 
                 {/* Plan 2: Pro */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col space-y-8 hover:border-white/20 transition-all group">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-white">Pro</h3>
+                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 flex flex-col space-y-8 hover:border-teal-500/30 transition-all group shadow-2xl relative overflow-hidden">
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-black text-white tracking-widest">Pro</h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">29€</span>
-                      <span className="text-white/40 text-sm font-medium">/ mois</span>
+                      <span className="text-5xl font-black text-white">29€</span>
+                      <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
                     </div>
-                    <p className="text-white/50 text-sm">La surveillance automatique pour les TPE/PME.</p>
+                    <p className="text-white/40 text-sm font-medium italic">La surveillance automatique pour les TPE/PME.</p>
                   </div>
                   <ul className="space-y-4 flex-1">
-                    <li className="flex items-center gap-3 text-sm text-teal-400 font-bold italic">
+                    <li className="text-xs font-black italic text-teal-400 mb-2">
                       Tout du plan Test, plus :
                     </li>
                     {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-white/80">
-                        <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
+                      <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                        <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -507,47 +540,52 @@ export default function Home() {
                   <button 
                     onClick={() => handlePlanClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '')}
                     disabled={loading}
-                    className="w-full py-4 rounded-2xl border border-white/10 hover:bg-white/5 text-white font-bold transition-all text-center disabled:opacity-50"
+                    className="w-full py-5 rounded-2xl bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-lg shadow-teal-500/5"
                   >
-                    {loading ? "Chargement..." : "DÉMARRER CE PLAN"}
+                    {loading ? "Chargement..." : "Démarrer ce plan"}
                   </button>
                 </div>
-
+ 
                 {/* Plan 3: Entreprise */}
-                <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border-2 border-teal-500/50 rounded-3xl p-8 flex flex-col space-y-8 shadow-2xl shadow-teal-500/10 hover:border-teal-400 transition-all z-20">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
-                    Recommandé
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">Entreprise</h3>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">79€</span>
-                      <span className="text-white/40 text-sm font-medium">/ mois</span>
+                <div className="relative group">
+                  <div className="absolute -inset-[2px] bg-gradient-to-r from-teal-500 via-blue-600 to-teal-500 rounded-[2.5rem] blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
+                  <div className="relative bg-[#0a0f1d] backdrop-blur-3xl rounded-[2.5rem] p-10 flex flex-col space-y-8 shadow-2xl h-full border border-white/5">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-teal-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-xl">
+                      Recommandé
                     </div>
-                    <p className="text-white/50 text-sm">Le bouclier complet avec expert dédié.</p>
-                  </div>
-                  <ul className="space-y-4 flex-1">
-                    <li className="flex items-center gap-3 text-sm text-blue-400 font-bold italic">
-                      Tout du plan Pro, plus :
-                    </li>
-                    {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-white/80">
-                        <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
+                    <div className="space-y-4">
+                      <h3 className="text-2xl font-black text-white tracking-widest">Entreprise</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-5xl font-black text-white">79€</span>
+                        <span className="text-white/40 text-sm font-black uppercase">/ mois</span>
+                      </div>
+                      <p className="text-white/40 text-sm font-medium italic">Le bouclier complet avec expert dédié.</p>
+                    </div>
+                    <ul className="space-y-4 flex-1">
+                      <li className="text-xs font-black italic text-blue-400 mb-2">
+                        Tout du plan Pro, plus :
                       </li>
-                    ))}
-                  </ul>
-                  <button 
-                    onClick={() => {
-                      const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
-                      handlePlanClick(id || '');
-                    }}
-                    disabled={loading}
-                    className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-600 text-white font-black shadow-lg shadow-blue-500/20 transition-all text-center disabled:opacity-50"
-                  >
-                    {loading ? "Chargement..." : "DÉMARRER AVEC L'ENTREPRISE"}
+                      {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
+                        <li key={i} className="flex items-center gap-3 text-sm text-white/70 font-medium">
+                          <CheckCircle2 size={18} className="text-teal-400 shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <button 
+                      onClick={() => {
+                        const id = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE;
+                        handlePlanClick(id || '');
+                      }}
+                      disabled={loading}
+                      className="w-full py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-teal-500 hover:scale-[1.02] active:scale-[0.98] text-white font-black transition-all text-center disabled:opacity-50 uppercase text-xs tracking-widest shadow-2xl shadow-blue-500/20"
+                    >
+                      {loading ? "Chargement..." : "Démarrer avec l'entreprise"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>RISE"}
                   </button>
                 </div>
               </div>
@@ -631,41 +669,58 @@ export default function Home() {
       </Dialog.Root>
 
       {/* FAQ Section */}
-      <div className="w-full max-w-4xl mx-auto mt-24 space-y-8 px-4 sm:px-0 relative z-10">
-        <div className="text-center space-y-3 mb-12">
-          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Foire aux questions</h2>
-          <p className="text-white/60 text-lg">Tout ce que vous devez savoir sur la conformité RGPD automatique.</p>
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-4xl mx-auto mt-32 space-y-12 px-4 sm:px-0 relative z-10"
+      >
+        <div className="text-center space-y-4">
+          <h2 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter">Foire aux questions</h2>
+          <p className="text-white/40 text-xl font-medium max-w-xl mx-auto italic">Tout ce que vous devez savoir sur la conformité RGPD automatique.</p>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {faqs.map((faq, index) => (
             <div 
               key={index} 
-              className={`bg-white/5 backdrop-blur-xl border ${openFaq === index ? 'border-teal-500/50' : 'border-white/10'} rounded-2xl overflow-hidden transition-all duration-300 hover:border-teal-500/30`}
+              className={`bg-white/5 backdrop-blur-3xl border ${openFaq === index ? 'border-teal-500/50 shadow-[0_0_30px_rgba(45,212,191,0.1)]' : 'border-white/10'} rounded-3xl overflow-hidden transition-all duration-500 hover:border-teal-500/30`}
             >
               <button
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                className="w-full flex items-center justify-between p-8 text-left focus:outline-none group"
               >
-                <span className="text-white font-bold text-lg">{faq.question}</span>
-                <span className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center transition-transform duration-300 ${openFaq === index ? 'rotate-180 bg-teal-500/20 text-teal-400' : 'text-white/40'}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <span className={`text-xl font-black transition-colors duration-300 ${openFaq === index ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+                  {faq.question}
                 </span>
+                <motion.div
+                  animate={{ rotate: openFaq === index ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease: "backOut" }}
+                  className={`flex-shrink-0 ml-4 w-10 h-10 rounded-2xl flex items-center justify-center transition-colors duration-300 ${openFaq === index ? 'bg-teal-500 text-slate-950 shadow-lg shadow-teal-500/30' : 'bg-white/5 text-white/40'}`}
+                >
+                  <Plus size={24} strokeWidth={3} />
+                </motion.div>
               </button>
               
-              <div 
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-              >
-                <div className="p-6 pt-0 text-white/60 leading-relaxed border-t border-white/5 mt-2">
-                  {faq.answer}
-                </div>
-              </div>
+              <AnimatePresence>
+                {openFaq === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                  >
+                    <div className="p-8 pt-0 text-white/50 text-lg leading-relaxed font-medium border-t border-white/5 mt-2 bg-gradient-to-b from-white/5 to-transparent">
+                      {faq.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Footer */}
       <footer className="w-full border-t border-white/10 bg-black/20 backdrop-blur-md mt-24 py-16 px-6 sm:px-24">
@@ -693,14 +748,14 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Produit */}
+           {/* Produit */}
           <div className="space-y-6">
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs">Produit</h4>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs">Produit</h4>
             <ul className="space-y-4">
               <li>
                 <button 
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="text-white/60 hover:text-teal-400 transition-colors text-sm"
+                  className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium"
                 >
                   Audit en direct
                 </button>
@@ -708,23 +763,34 @@ export default function Home() {
               <li>
                 <Link 
                   href="/dashboard"
-                  className="text-white/60 hover:text-teal-400 transition-colors text-sm"
+                  className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium"
                 >
-                  Tarifs
+                  Tarifs & Plans
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/blog"
+                  className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium"
+                >
+                  Blog Expert
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Légal */}
+           {/* Légal */}
           <div className="space-y-6">
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs">Légal</h4>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs">Légal</h4>
             <ul className="space-y-4">
               <li>
-                <a href="/mentions-legales" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Mentions Légales</a>
+                <Link href="/mentions-legales" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Mentions Légales</Link>
               </li>
               <li>
-                <a href="/politique-confidentialite" className="text-white/60 hover:text-teal-400 transition-colors text-sm">Politique de Confidentialité</a>
+                <Link href="/politique-confidentialite" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Politique de Confidentialité</Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="text-white/40 hover:text-teal-400 transition-colors text-sm font-medium">Gestion des Cookies</Link>
               </li>
             </ul>
           </div>
