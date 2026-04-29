@@ -154,7 +154,16 @@ export default function Home() {
   };
 
   const handlePlanClick = async (priceId: string) => {
-    if (!priceId) return;
+    // 1. Vérification de la clé publique (Debug)
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      alert("Erreur : La clé NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY est manquante sur Vercel.");
+    }
+
+    // 2. Vérification de l'ID
+    if (!priceId || !priceId.startsWith('price_')) {
+      alert(`Erreur : ID de plan invalide ou manquant (${priceId}). Il doit commencer par 'price_'.`);
+      return;
+    }
 
     if (!isSignedIn) {
       router.push("/sign-up");
@@ -179,9 +188,11 @@ export default function Home() {
       
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        alert("Erreur Serveur : Impossible de créer la session Stripe.");
       }
     } catch (error) {
-      // Erreur silencieuse en prod
+      alert("Erreur de connexion au serveur de paiement.");
     } finally {
       setLoading(false);
     }

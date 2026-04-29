@@ -6,8 +6,14 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("Tentative de checkout pour le Price ID:", body.priceId);
+
+    if (!body.priceId?.startsWith('price_')) {
+      console.warn("Format de Price ID potentiellement invalide:", body.priceId);
+    }
 
     if (!process.env.STRIPE_SECRET_KEY) {
+      console.error("STRIPE_SECRET_KEY manquante");
       return NextResponse.json({ error: "Configuration Error" }, { status: 500 });
     }
 
