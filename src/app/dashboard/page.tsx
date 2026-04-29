@@ -411,9 +411,9 @@ function DashboardContent() {
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
             {[
-              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: currentPlan === 'free', id: "" },
-              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: currentPlan === 'pro', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '' },
-              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: currentPlan === 'enterprise', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '' }
+              { name: "OFFRE TEST", price: "0", features: ["Scan manuel illimité", "Rapport de base", "Score de conformité"], active: currentPlan === 'free', id: "", plus: null },
+              { name: "PRO", price: "29", features: ["Guide de correction", "Alertes 24/7", "Rapports PDF illimités", "Support par email"], active: currentPlan === 'pro', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '', plus: "Tout du plan Test, plus :" },
+              { name: "ENTREPRISE", price: "79", features: ["Expert DPO dédié", "Audit trimestriel", "Support prioritaire", "Correctifs automatiques"], active: currentPlan === 'enterprise', id: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTREPRISE || '', plus: "Tout du plan Pro, plus :" }
             ].map((plan, i) => (
               <div key={i} className={`relative bg-white/5 backdrop-blur-xl border ${plan.active ? 'border-teal-500/50 shadow-2xl' : 'border-white/10'} rounded-[2.5rem] p-10 flex flex-col space-y-8 transition-all hover:border-white/20`}>
                 {plan.active && (
@@ -427,6 +427,11 @@ function DashboardContent() {
                   </div>
                 </div>
                 <ul className="space-y-4 flex-1">
+                  {plan.plus && (
+                    <li className="text-xs font-black italic text-teal-400 mb-2">
+                      {plan.plus}
+                    </li>
+                  )}
                   {plan.features.map((f, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm text-white/70">
                       <CheckCircle size={16} className="text-teal-400 shrink-0" /> {f}

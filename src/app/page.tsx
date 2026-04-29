@@ -492,6 +492,9 @@ export default function Home() {
                     <p className="text-white/50 text-sm">La surveillance automatique pour les TPE/PME.</p>
                   </div>
                   <ul className="space-y-4 flex-1">
+                    <li className="flex items-center gap-3 text-sm text-teal-400 font-bold italic">
+                      Tout du plan Test, plus :
+                    </li>
                     {["Scan hebdomadaire", "Alertes email temps réel", "Générateur de politique"].map((feature, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-white/80">
                         <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -524,7 +527,10 @@ export default function Home() {
                     <p className="text-white/50 text-sm">Le bouclier complet avec expert dédié.</p>
                   </div>
                   <ul className="space-y-4 flex-1">
-                    {["Scan quotidien", "Support prioritaire 24/7", "Correctifs par nos experts"].map((feature, i) => (
+                    <li className="flex items-center gap-3 text-sm text-blue-400 font-bold italic">
+                      Tout du plan Pro, plus :
+                    </li>
+                    {["Scan quotidien", "Support prioritaire 24/7", "Expert DPO dédié", "Audit trimestriel"].map((feature, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-white/80">
                         <svg className="w-5 h-5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
