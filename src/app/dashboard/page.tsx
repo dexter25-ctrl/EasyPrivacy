@@ -108,7 +108,7 @@ function DashboardContent() {
       const data = await response.json();
       if (data.url) window.location.href = data.url;
     } catch (error) {
-      console.error("Erreur lors du checkout", error);
+      // Silence
     } finally {
       setLoading(false);
     }

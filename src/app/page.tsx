@@ -147,7 +147,6 @@ export default function Home() {
         closeItems();
       }, 3000);
     } catch (err) {
-      console.error("Erreur lors de l'envoi au webhook:", err);
       // Fallback: montrer le succès quand même pour l'UX si le webhook bloque sur une erreur réseau
       setModalSuccess(true);
       setTimeout(() => closeItems(), 3000);
@@ -180,11 +179,9 @@ export default function Home() {
       
       if (data.url) {
         window.location.href = data.url;
-      } else {
-        console.error("Erreur: Pas d'url reçue", data);
       }
     } catch (error) {
-      console.error("Erreur lors du checkout", error);
+      // Erreur silencieuse en prod
     } finally {
       setLoading(false);
     }
@@ -827,4 +824,3 @@ export default function Home() {
     </main>
   );
 }
-// Build final v1.1
