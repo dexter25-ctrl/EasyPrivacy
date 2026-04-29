@@ -66,73 +66,76 @@ export default function BlogPage() {
         </div>
 
         {/* Featured Article (Magazine Style) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="relative aspect-[21/10] rounded-[3.5rem] overflow-hidden border border-white/10 group cursor-pointer"
-        >
-          <img 
-            src={tb.articles[0].image} 
-            alt={tb.articles[0].title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent p-12 flex flex-col justify-end space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="bg-teal-500 text-slate-950 text-[10px] font-black uppercase px-4 py-1.5 rounded-full w-fit">Featured</span>
-              <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full w-fit">{tb.articles[0].category}</span>
+        <Link href={`/blog/${tb.articles[0].slug}`}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="relative aspect-[21/10] rounded-[3.5rem] overflow-hidden border border-white/10 group cursor-pointer"
+          >
+            <img 
+              src={tb.articles[0].image} 
+              alt={tb.articles[0].title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-50"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent p-12 flex flex-col justify-end space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="bg-teal-500 text-slate-950 text-[10px] font-black uppercase px-4 py-1.5 rounded-full w-fit">Featured</span>
+                <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full w-fit">{tb.articles[0].category}</span>
+              </div>
+              <h2 className="text-4xl sm:text-6xl font-black text-white max-w-4xl leading-[0.95] group-hover:text-teal-400 transition-colors tracking-tighter">
+                {tb.articles[0].title}
+              </h2>
+              <p className="text-white/60 text-xl max-w-2xl line-clamp-2 font-medium italic">
+                {tb.articles[0].excerpt}
+              </p>
+              <div className="flex items-center gap-8 pt-4 text-white/40 text-sm font-black uppercase tracking-widest">
+                <span className="flex items-center gap-2"><Calendar size={16} className="text-teal-400"/> {tb.articles[0].date}</span>
+                <span className="flex items-center gap-2"><Clock size={16} className="text-teal-400"/> {tb.articles[0].readTime} {tb.readingTime}</span>
+              </div>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-black text-white max-w-4xl leading-[0.95] group-hover:text-teal-400 transition-colors tracking-tighter">
-              {tb.articles[0].title}
-            </h2>
-            <p className="text-white/60 text-xl max-w-2xl line-clamp-2 font-medium italic">
-              {tb.articles[0].excerpt}
-            </p>
-            <div className="flex items-center gap-8 pt-4 text-white/40 text-sm font-black uppercase tracking-widest">
-              <span className="flex items-center gap-2"><Calendar size={16} className="text-teal-400"/> {tb.articles[0].date}</span>
-              <span className="flex items-center gap-2"><Clock size={16} className="text-teal-400"/> {tb.articles[0].readTime} {tb.readingTime}</span>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </Link>
 
         {/* Article Grid (Magazine Layout) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {tb.articles.slice(1).map((article, i) => (
-            <motion.div 
-              key={article.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white/[0.02] backdrop-blur-xl border border-white/5 rounded-[3rem] overflow-hidden group hover:border-teal-500/30 transition-all flex flex-col"
-            >
-              <div className="aspect-[4/3] relative overflow-hidden">
-                <img 
-                  src={article.image} 
-                  alt={article.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70"
-                />
-                <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-md text-white text-[10px] font-black px-4 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
-                  {article.category}
+            <Link key={article.id} href={`/blog/${article.slug}`}>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white/[0.02] backdrop-blur-xl border border-white/5 rounded-[3rem] overflow-hidden group hover:border-teal-500/30 transition-all flex flex-col h-full"
+              >
+                <div className="aspect-[4/3] relative overflow-hidden">
+                  <img 
+                    src={article.image} 
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70"
+                  />
+                  <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-md text-white text-[10px] font-black px-4 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
+                    {article.category}
+                  </div>
                 </div>
-              </div>
-              <div className="p-10 flex-1 flex flex-col space-y-6">
-                <h3 className="text-2xl font-black text-white group-hover:text-teal-400 transition-colors leading-tight tracking-tight">
-                  {article.title}
-                </h3>
-                <p className="text-white/40 text-sm leading-relaxed flex-1 font-medium italic">
-                  {article.excerpt}
-                </p>
-                <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                  <span className="text-[10px] text-white/30 font-black uppercase tracking-widest flex items-center gap-2">
-                    <Clock size={12} /> {article.readTime} min
-                  </span>
-                  <button className="text-teal-400 text-xs font-black uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
-                    {lang === 'fr' ? 'Lire' : 'Read'} <ArrowRight size={14} />
-                  </button>
+                <div className="p-10 flex-1 flex flex-col space-y-6">
+                  <h3 className="text-2xl font-black text-white group-hover:text-teal-400 transition-colors leading-tight tracking-tight">
+                    {article.title}
+                  </h3>
+                  <p className="text-white/40 text-sm leading-relaxed flex-1 font-medium italic">
+                    {article.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                    <span className="text-[10px] text-white/30 font-black uppercase tracking-widest flex items-center gap-2">
+                      <Clock size={12} /> {article.readTime} min
+                    </span>
+                    <div className="text-teal-400 text-xs font-black uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
+                      {lang === 'fr' ? 'Lire' : 'Read'} <ArrowRight size={14} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
           
           {/* Magazine Style Newsletter/CTA Card */}

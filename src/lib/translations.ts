@@ -87,8 +87,21 @@ export const translations = {
       articles: [
         {
           id: 1,
+          slug: "rgpd-2026-pme-amende",
           title: "RGPD en 2026 : Pourquoi 85% des PME risquent une amende (et comment l'éviter)",
           excerpt: "Les contrôles automatisés de la CNIL s'intensifient. Découvrez comment protéger votre entreprise des sanctions liées à la conformité web.",
+          content: `Le paysage de la protection des données a radicalement changé. En 2026, la CNIL a déployé de nouveaux algorithmes de scan automatique capables d'auditer des milliers de sites par heure. 
+
+### Le constat est alarmant
+Selon nos dernières études, 85% des sites web de PME présentent au moins une faille critique : 
+- Absence de bouton "Refuser tout" au premier niveau.
+- Dépôt de traceurs publicitaires sans consentement préalable.
+- Mentions légales obsolètes ou incomplètes.
+
+### Comment éviter la sanction ?
+La conformité n'est plus une option, c'est une nécessité technique. Un **audit RGPD** régulier permet d'identifier ces failles avant les autorités. La **conformité web** repose désormais sur une transparence totale vis-à-vis de l'utilisateur.
+
+En utilisant des outils de surveillance automatisée, vous pouvez corriger ces erreurs en temps réel et éviter des **amendes CNIL** qui peuvent paralyser votre activité.`,
           category: "Légal",
           date: "29 Avril 2026",
           readTime: "5",
@@ -96,8 +109,15 @@ export const translations = {
         },
         {
           id: 2,
+          slug: "audit-rgpd-points-critiques",
           title: "Audit RGPD : Les 5 points critiques que vous ignorez sûrement",
           excerpt: "Un simple bandeau cookie ne suffit plus. Voici les failles techniques que les outils d'audit détectent en premier.",
+          content: `Faire un audit ne se limite pas à regarder si un bandeau s'affiche. Voici les 5 points que nous vérifions systématiquement :
+1. La durée de vie des cookies.
+2. Le blocage effectif des scripts tiers.
+3. L'accessibilité de la politique de confidentialité.
+4. La présence d'un bouton de refus clair.
+5. Le chiffrement des données de formulaires.`,
           category: "Expertise",
           date: "25 Avril 2026",
           readTime: "4",
@@ -192,8 +212,21 @@ export const translations = {
       articles: [
         {
           id: 1,
+          slug: "gdpr-2026-sme-fine",
           title: "GDPR in 2026: Why 85% of SMEs risk a fine (and how to avoid it)",
           excerpt: "Automated checks are intensifying. Discover how to protect your business from web compliance sanctions.",
+          content: `The data protection landscape has radically changed. In 2026, the authorities deployed new automated scanning algorithms capable of auditing thousands of sites per hour.
+
+### The situation is alarming
+According to our latest studies, 85% of SME websites have at least one critical flaw:
+- Absence of a "Decline all" button at the first level.
+- Placing advertising trackers without prior consent.
+- Obsolete or incomplete legal notices.
+
+### How to avoid sanctions?
+Compliance is no longer an option, it is a technical necessity. A regular **GDPR audit** helps identify these flaws before the authorities do. **Web compliance** is now based on total transparency towards the user.
+
+By using automated monitoring tools, you can correct these errors in real-time and avoid fines that can paralyze your business.`,
           category: "Legal",
           date: "April 29, 2026",
           readTime: "5",
@@ -201,8 +234,15 @@ export const translations = {
         },
         {
           id: 2,
+          slug: "gdpr-audit-critical-points",
           title: "GDPR Audit: The 5 critical points you probably ignore",
           excerpt: "A simple cookie banner is no longer enough. Here are the technical flaws that audit tools detect first.",
+          content: `Doing an audit is not just about seeing if a banner appears. Here are the 5 points we systematically check:
+1. Cookie lifespan.
+2. Effective blocking of third-party scripts.
+3. Accessibility of the privacy policy.
+4. Presence of a clear decline button.
+5. Encryption of form data.`,
           category: "Expertise",
           date: "April 25, 2026",
           readTime: "4",
