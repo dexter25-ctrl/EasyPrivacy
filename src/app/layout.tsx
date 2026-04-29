@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EasyPrivacy | Conformité RGPD",
-  description: "Assurez votre conformité RGPD en un clic",
+  title: "Conformité RGPD automatique | EasyPrivacy",
+  description: "Sécurisez votre site avec notre solution de conformité RGPD automatique. Évitez les amendes de la CNIL grâce à un audit en temps réel.",
 };
 
 import Navbar from "@/components/Navbar";

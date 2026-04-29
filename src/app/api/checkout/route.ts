@@ -27,6 +27,10 @@ export async function POST(req: Request) {
       mode: 'subscription',
       success_url: `https://easy-privacy.vercel.app/dashboard?success=true`,
       cancel_url: `https://easy-privacy.vercel.app/dashboard?canceled=true`,
+      metadata: {
+        auditUrl: body.auditUrl || 'Non spécifié',
+        auditScore: body.auditScore?.toString() || '0',
+      }
     });
 
     return NextResponse.json({ url: session.url });

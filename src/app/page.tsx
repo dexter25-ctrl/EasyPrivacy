@@ -26,6 +26,30 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEmail, setModalEmail] = useState("");
   const [modalSuccess, setModalSuccess] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      question: "Pourquoi la conformité RGPD est-elle obligatoire ?",
+      answer: "Depuis 2018, tout site web collectant des données (cookies, formulaires, analytics) doit respecter le RGPD. C'est une obligation légale pour protéger la vie privée de vos visiteurs."
+    },
+    {
+      question: "Quels sont les risques d'amendes avec la CNIL ?",
+      answer: "Les sanctions peuvent atteindre jusqu'à 4% de votre chiffre d'affaires mondial ou 20 millions d'euros. De plus en plus de contrôles automatisés sont effectués, ciblant même les TPE/PME."
+    },
+    {
+      question: "Comment EasyPrivacy rend mon site conforme automatiquement ?",
+      answer: "Notre algorithme scanne vos pages pour détecter les trackers non déclarés, vérifie vos mentions légales, et vous fournit un plan d'action immédiat pour tout corriger en quelques clics."
+    },
+    {
+      question: "Mon agence web a déjà fait le site, suis-je en règle ?",
+      answer: "Pas forcément. La majorité des agences se concentrent sur le design et oublient les paramètres de consentement stricts (comme le refus des cookies). Un audit indépendant est toujours recommandé."
+    },
+    {
+      question: "Dois-je payer pour faire le test de conformité ?",
+      answer: "Non, notre audit de base est 100% gratuit. Il vous permet de connaître immédiatement votre score et d'identifier vos principales failles juridiques sans engagement."
+    }
+  ];
 
   // Pré-remplir l'email si l'utilisateur est connecté
   useEffect(() => {
@@ -142,10 +166,17 @@ export default function Home() {
 
     try {
       setLoading(true);
+      const lastAuditStr = localStorage.getItem("lastAudit");
+      const lastAudit = lastAuditStr ? JSON.parse(lastAuditStr) : null;
+      
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ 
+          priceId, 
+          auditUrl: lastAudit?.url, 
+          auditScore: lastAudit?.score 
+        }),
       });
       const data = await response.json();
       
@@ -587,6 +618,43 @@ export default function Home() {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+
+      {/* FAQ Section */}
+      <div className="w-full max-w-4xl mx-auto mt-24 space-y-8 px-4 sm:px-0 relative z-10">
+        <div className="text-center space-y-3 mb-12">
+          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">Foire aux questions</h2>
+          <p className="text-white/60 text-lg">Tout ce que vous devez savoir sur la conformité RGPD automatique.</p>
+        </div>
+        
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div 
+              key={index} 
+              className={`bg-white/5 backdrop-blur-xl border ${openFaq === index ? 'border-teal-500/50' : 'border-white/10'} rounded-2xl overflow-hidden transition-all duration-300 hover:border-teal-500/30`}
+            >
+              <button
+                onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+              >
+                <span className="text-white font-bold text-lg">{faq.question}</span>
+                <span className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center transition-transform duration-300 ${openFaq === index ? 'rotate-180 bg-teal-500/20 text-teal-400' : 'text-white/40'}`}>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </button>
+              
+              <div 
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className="p-6 pt-0 text-white/60 leading-relaxed border-t border-white/5 mt-2">
+                  {faq.answer}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="w-full border-t border-white/10 bg-black/20 backdrop-blur-md mt-24 py-16 px-6 sm:px-24">
