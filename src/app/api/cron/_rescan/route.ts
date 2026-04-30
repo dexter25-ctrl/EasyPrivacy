@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { performScan } from '@/lib/scanner';
-
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
+
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { performScan } from '@/lib/scanner';
 
 
 export async function GET(req: Request) {
