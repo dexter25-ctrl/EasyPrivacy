@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,15 +32,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="fr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-[#0f172a] via-[#113247] to-[#042f2e] text-white selection:bg-teal-500/30 pt-20`}
-      >
-        <Navbar />
-        {children}
-        <CookieBanner />
-        <Analytics />
-      </body>
-    </html>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-[#0f172a] via-[#113247] to-[#042f2e] text-white selection:bg-teal-500/30 pt-20`}
+        >
+          <Navbar />
+          {children}
+          <CookieBanner />
+          <Analytics />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
