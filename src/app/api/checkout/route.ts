@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export async function POST(req: Request) {
   const { userId } = await auth();

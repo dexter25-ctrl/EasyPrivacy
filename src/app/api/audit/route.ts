@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { performScan } from '@/lib/scanner';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 
 export async function POST(req: Request) {
