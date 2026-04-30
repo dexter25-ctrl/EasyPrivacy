@@ -67,17 +67,59 @@ function DashboardContent() {
   const [activeModal, setActiveModal] = useState<"score" | "risques" | "statut" | null>(null);
 
   useEffect(() => {
-    // Charger l'audit
-    const savedAudit = localStorage.getItem("lastAudit");
-    if (savedAudit) {
-      setLastAudit(JSON.parse(savedAudit));
-    }
+    // Charger l'audit depuis la DB
+    const fetchAudit = async () => {
+      try {
+        const res = await fetch("/api/audit/me");
+        const dbAudit = await res.json();
+        
+        if (dbAudit && !dbAudit.error) {
+          setLastAudit({
+            score: dbAudit.score,
+            date: new Date(dbAudit.updatedAt).toLocaleDateString(),
+            url: dbAudit.url,
+            criticalPoints: dbAudit.criticalPoints,
+          });
+          setCompletedTasks(dbAudit.completedTasks || []);
+          setCurrentPlan(dbAudit.plan || 'free');
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to fetch audit from DB", err);
+      }
+      return false;
+    };
 
-    // Charger le plan
-    const savedPlan = localStorage.getItem("currentPlan") as any;
-    if (savedPlan) {
-      setCurrentPlan(savedPlan);
-    }
+    const init = async () => {
+      const foundInDb = await fetchAudit();
+      
+      // Fallback sur localStorage si rien en DB
+      if (!foundInDb) {
+        const savedAudit = localStorage.getItem("lastAudit");
+        if (savedAudit) {
+          const parsed = JSON.parse(savedAudit);
+          setLastAudit(parsed);
+          
+          // Tenter de sauvegarder le scan local en DB si l'utilisateur est connecté
+          if (user) {
+            saveToDb({
+              url: parsed.url,
+              score: parsed.score,
+              criticalPoints: parsed.criticalPoints,
+              completedTasks: [],
+              plan: 'free'
+            });
+          }
+        }
+
+        const savedPlan = localStorage.getItem("currentPlan") as any;
+        if (savedPlan) {
+          setCurrentPlan(savedPlan);
+        }
+      }
+    };
+
+    if (user) init();
 
     // Détecter le succès du paiement
     if (searchParams.get("success") === "true") {
@@ -88,7 +130,19 @@ function DashboardContent() {
       setShowSuccessBanner(true);
       window.history.replaceState({}, '', '/dashboard');
     }
-  }, [searchParams]);
+  }, [user, searchParams]);
+
+  const saveToDb = async (data: any) => {
+    try {
+      await fetch("/api/audit/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.error("Failed to save to DB", err);
+    }
+  };
 
   const handleSendEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,10 +200,29 @@ function DashboardContent() {
   const currentScore = Math.min(100, Math.round(baseScore + (completedTasks.length * scoreIncrement)));
   const risksCount = Math.max(0, taskCount - completedTasks.length);
 
-  const toggleTask = (point: string) => {
-    setCompletedTasks(prev => 
-      prev.includes(point) ? prev.filter(t => t !== point) : [...prev, point]
-    );
+  const toggleTask = async (point: string) => {
+    const newCompletedTasks = completedTasks.includes(point) 
+      ? completedTasks.filter(t => t !== point) 
+      : [...completedTasks, point];
+    
+    setCompletedTasks(newCompletedTasks);
+
+    // Sauvegarde immédiate en DB
+    if (lastAudit) {
+      // Recalcul du score pour la sauvegarde
+      const baseScore = lastAudit.score > 0 ? lastAudit.score : 20;
+      const taskCount = lastAudit.criticalPoints.length;
+      const scoreIncrement = taskCount > 0 ? (100 - baseScore) / taskCount : 0;
+      const newScore = Math.min(100, Math.round(baseScore + (newCompletedTasks.length * scoreIncrement)));
+
+      await saveToDb({
+        url: lastAudit.url,
+        score: newScore,
+        criticalPoints: lastAudit.criticalPoints,
+        completedTasks: newCompletedTasks,
+        plan: currentPlan
+      });
+    }
   };
 
   const getRepairExplanation = (point: string) => {

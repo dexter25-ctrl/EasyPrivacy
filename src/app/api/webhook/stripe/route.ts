@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
-
-// On initialise au besoin dans le handler pour éviter les erreurs de build si les clés manquent
-
+import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -17,7 +15,6 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   try {
-    // Vérification de la signature Stripe avec STRIPE_WEBHOOK_SECRET
     event = stripe.webhooks.constructEvent(
       payload,
       signature,
@@ -27,15 +24,38 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Webhook Error" }, { status: 400 });
   }
 
-  // Écouter l'événement checkout terminé
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     
-    // Récupération de l'email du client via la session Stripe
     const customerEmail = session.customer_details?.email;
+    const userId = session.client_reference_id || session.metadata?.userId;
     const auditUrl = session.metadata?.auditUrl || 'votre site';
     const plan = session.metadata?.plan || 'pro';
     const planName = plan === 'enterprise' ? 'Entreprise' : 'Pro';
+
+    // Mise à jour de la base de données
+    if (userId) {
+      await prisma.user.upsert({
+        where: { id: userId },
+        update: { plan: plan as string },
+        create: {
+          id: userId,
+          email: customerEmail || 'unknown',
+          stripeCustomerId: session.customer as string,
+          plan: plan as string,
+        }
+      });
+      
+      // On crée aussi un audit initial si besoin
+      await prisma.audit.create({
+        data: {
+          url: auditUrl,
+          score: parseInt(session.metadata?.auditScore || '0'),
+          completedTasks: [],
+          userId: userId,
+        }
+      });
+    }
 
     if (customerEmail) {
       const emailHtml = `

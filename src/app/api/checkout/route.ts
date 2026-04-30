@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   // 1. Vérification stricte de la clé secrète dès le début
   const stripeSecret = process.env.STRIPE_SECRET_KEY;
   if (!stripeSecret || !stripeSecret.startsWith('sk_')) {
@@ -18,14 +25,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { priceId, auditUrl, auditScore } = body;
 
-    console.log("--- TENTATIVE CHECKOUT ---");
-    console.log("Price ID:", priceId);
-
     if (!priceId) {
       return NextResponse.json({ error: "Missing Price ID" }, { status: 400 });
     }
 
-    // 2. Initialisation de Stripe à l'intérieur du handler
     const stripe = new Stripe(stripeSecret, {
       apiVersion: '2023-10-16' as any,
     });
@@ -37,9 +40,11 @@ export async function POST(req: Request) {
         payment_method_types: ['card'],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
+        client_reference_id: userId,
         success_url: `https://easy-privacy.vercel.app/dashboard?success=true&plan=${plan}`,
         cancel_url: `https://easy-privacy.vercel.app/dashboard?canceled=true`,
         metadata: {
+          userId: userId,
           auditUrl: auditUrl || 'Non spécifié',
           auditScore: auditScore?.toString() || '0',
           plan: plan
