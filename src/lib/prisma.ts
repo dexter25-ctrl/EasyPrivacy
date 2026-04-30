@@ -10,10 +10,10 @@ const prismaClientSingleton = () => {
   if (process.env.NEXT_PHASE === 'phase-production-build') {
     return new Proxy({}, { get: () => () => Promise.resolve() }) as unknown as PrismaClient
   }
-  
+
   const connectionString = process.env.DATABASE_URL_POSTGRES_PRISMA_URL || "postgres://dummy:dummy@dummy:5432/dummy"
   const pool = new Pool({ connectionString })
-  const adapter = new PrismaNeon(pool)
+  const adapter = new PrismaNeon(pool as any);
   return new PrismaClient({ adapter })
 }
 
