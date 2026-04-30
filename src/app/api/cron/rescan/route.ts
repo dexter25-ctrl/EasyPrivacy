@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { performScan } from '@/lib/scanner';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(req: Request) {
   // Optionnel: Vérification du secret Vercel Cron
   const authHeader = req.headers.get('authorization');
