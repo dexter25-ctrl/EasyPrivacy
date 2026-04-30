@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^7.2.7",
     "@radix-ui/react-dialog": "^1.1.15",
     "@stripe/stripe-js": "^9.3.1",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.38.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
